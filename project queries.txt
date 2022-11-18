@@ -1,0 +1,107 @@
+Simple queries
+
+1. return all songs with a low liveliness:
+SELECT *
+FROM Songs
+WHERE liveliness < 0.5
+
+2. return all songs played in Buenos Aires (user question: what do people listen to in a location in general, regardless of weather conditions?):
+SELECT *
+FROM Songs s JOIN Charts ch ON s.artist = ch.artist AND s.title = ch.title
+    JOIN Cities c ON ch.region = c.region
+WHERE c.city = ‘Buenos Aires’
+
+3. return all songs that were played on a rainy day:
+WITH rainy_days(date, location) rd AS (
+    SELECT date, location
+    FROM Weather_data
+    WHERE precipitation > 0.2)
+SELECT *
+FROM Songs s
+WHERE s.date = rd.date AND s.region = rd.location
+
+4. return all songs that were played in Philadelphia on October 10, 2022:
+SELECT *
+FROM Songs s JOIN Charts ch ON s.artist = ch.artist AND s.title = ch.title
+JOIN Cities c ON ch.region = c.region
+JOIN Weather_data w ON w.location = c.city
+WHERE w.location = ‘Philadelphia’ AND s.date = ‘10/10/2022’
+
+5. return all songs with a high liveliness that were played on days with high rainfall :
+SELECT *
+FROM Songs s JOIN Charts ch ON s.artist = ch.artist AND s.title = ch.title
+    JOIN Weather_data w ON ch.date = w.date
+WHERE s.liveliness > 0.5 AND w.precipitation > 0.2
+
+6. return all songs played in London while the weather was cloudy:
+WITH cloudy_days_london(date) cd AS (
+    SELECT date
+    FROM Weather_data
+    WHERE average_cloudiness >0.2 AND location = ‘London’)
+WITH london_songs ls AS (
+    SELECT *
+    FROM Song
+    WHERE region = ‘London’)
+SELECT *
+FROM ls
+WHERE ls.date = cd.date
+
+----------------------------------------------------------------------
+
+Complex queries
+
+1. get the average rainfall on days where a certain song was played (user question would be: is this song played on rainy days? on sunny days? etc.):
+WITH dates_played dp AS (
+    SELECT date 
+    FROM Songs s JOIN Charts ch ON s.artist = ch.artist AND s.title = ch.title
+        JOIN Weather_data w ON ch.date = w.date
+    WHERE s.artist=’P!nk’ AND s.title LIKE ‘Just Like Fire%’)
+SELECT AVG(precipitation)
+FROM Weather_data w
+WHERE w.date IN dp
+
+2. get the minimum, maximum, and average liveliness of songs not played on cloudy days (user question: how lively are played songs when the weather is not cloudy?):
+WITH cloudy_songs cs AS (
+    SELECT id
+    FROM Songs s JOIN Charts ch ON s.artist = ch.artist AND s.title = ch.title
+JOIN Cities c ON c.region = ch.region
+JOIN Weather_data w ON w.location = c.city
+AND w.date = ch.date 
+    WHERE w.average_cloudiness > 0.2)
+SELECT MIN(liveliness), MAX(liveliness), AVG(liveliness)
+FROM Song s
+WHERE s.id NOT IN cs
+
+3. return all songs played on snowy days across multiple locations - note that the date of the snowy days in question do not have to be the same for the different locations (user question: what songs are consistently played for a given weather, consistently meaning across more than one place?):
+WITH snowy_days(date, location) sd AS (
+    SELECT date, location  // these will be distinct by default since they’re keys
+    FROM Weather_data
+    WHERE snowfall > 0.2)
+WITH snowy_day_counts sdc AS (
+    SELECT s.artist, s.title, COUNT(*) AS count
+    FROM Songs s JOIN Charts ch ON s.artist = ch.artist AND s.title = ch.title
+JOIN Cities c ON c.region = ch.region
+JOIN Weather_data w ON w.location = c.city
+AND w.date = ch.date 
+        GROUP BY s.artist, s.title)
+SELECT artist, title
+FROM sdc
+WHERE count > 1
+
+4. return all cities where the average liveliness of songs played on sunny days (in that location) is high:
+WITH sunny_songs ss AS (
+    SELECT w.location, s.artist, s.name, s.liveliness
+    FROM Songs s JOIN Charts ch ON s.artist = ch.artist AND s.title = ch.title
+JOIN Cities c ON c.region = ch.region
+JOIN Weather_data w ON w.location = c.city
+AND w.date = ch.date 
+    WHERE rainfall < 0.2 AND snowfall < 0.2)
+WITH avg_liveliness al AS (
+    SELECT location, AVG(liveliness) AS average
+    FROM ss
+    GROUP BY location)
+SELECT location 
+FROM al
+WHERE average > 0.5
+    
+

@@ -1,3 +1,12 @@
+Database Credentials
+
+Host: spotify.cqn8vert6ip3.us-east-1.rds.amazonaws.com
+Port: 3306
+User: admin 
+Password: P4ssw0rd
+
+----------------------------------------------------------------------
+
 Simple queries
 
 1. return all songs with a low liveliness:
@@ -104,8 +113,3 @@ SELECT location
 FROM al
 WHERE average > 0.5
     
-Database Credentials
-Host: spotify.cqn8vert6ip3.us-east-1.rds.amazonaws.com
-Port: 3306
-User: admin 
-Password: P4ssw0rd

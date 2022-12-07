@@ -6,7 +6,9 @@ import {
 } from 'antd'
 
 import MenuBar from '../components/MenuBar';
-import { getAllMatches, getAllPlayers, getAllSongs, getBasicPlaylist, getSongAvgWeatherStat } from '../fetcher'
+import { getAllMatches, getAllPlayers, 
+  getAllSongs, getBasicPlaylist, 
+  getSongStatsForWeather, getSongAvgWeatherStats, getSongsForWeather, getSongsLocationDate } from '../fetcher'
 const { Column, ColumnGroup } = Table;
 const { Option } = Select;
 
@@ -196,6 +198,48 @@ const songStatColumns = [
   },
 ];
 
+const songWeatherStatColumns = [
+  {
+    title: 'Rainfall',
+    dataIndex: 'Rainfall',
+    key: 'Rainfall',
+    sorter: (a, b) => a.Rainfall - b.Rainfall
+  },
+  {
+    title: 'Temperature',
+    dataIndex: 'Temperature',
+    key: 'Temperature',
+    sorter: (a, b) => a.Temperature - b.Temperature
+  },
+  {
+    title: 'Snowfall',
+    dataIndex: 'Snowfall',
+    key: 'Snowfall',
+    sorter: (a, b) => a.Snowfall - b.Snowfall
+  },
+];
+
+const songsForWeatherColumns = [
+  {
+    title: 'Title',
+    dataIndex: 'Title',
+    key: 'Title',
+    sorter: (a, b) => a.title.localeCompare(b.title),
+  },
+  {
+    title: 'Artist',
+    dataIndex: 'Artist',
+    key: 'Artist',
+    sorter: (a, b) => a.artist.localeCompare(b.artist),
+  },
+  {
+    title: 'Region',
+    dataIndex: 'Region',
+    key: 'Region',
+    sorter: (a, b) => a.region.localeCompare(b.region),
+  },
+];
+
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -209,6 +253,9 @@ class HomePage extends React.Component {
       songsResults: [],
       playlistResults: [],
       songStatResults: [],
+      songWeatherStatResults: [],
+      songsForWeatherResults: [],
+      songsLocationDateResults: [],
       pagination: null  
     }
 
@@ -254,12 +301,25 @@ class HomePage extends React.Component {
       this.setState({ playlistResults: res.results })
     })
 
-    getSongAvgWeatherStat('acousticness', 'United States', 'rainy').then(res => {
+    getSongStatsForWeather('acousticness', 'United States', 'rainy').then(res => {
       console.log(res.results)
       this.setState({ songStatResults: res.results })
     })
 
- 
+    getSongAvgWeatherStats('ZAYN', 'Still Got Time').then(res => {
+      console.log(res.results)
+      this.setState({ songWeatherStatResults: res.results })
+    })
+
+    getSongsForWeather('windy', ).then(res => {
+      console.log(res.results)
+      this.setState({ songsForWeatherResults: res.results })
+    })
+
+    getSongsLocationDate('Spain', '2018-06-15').then(res => {
+      console.log(res.results)
+      this.setState({ songsLocationDateResults: res.results })
+    })
   }
 
 
@@ -279,8 +339,23 @@ class HomePage extends React.Component {
         </div>
 
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
-          <h3>Songs avg stats for weather</h3>
+          <h3>Songs stats for weather</h3>
           <Table dataSource={this.state.songStatResults} columns={songStatColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
+        </div>
+
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
+          <h3>Average weather stats for song</h3>
+          <Table dataSource={this.state.songWeatherStatResults} columns={songWeatherStatColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
+        </div>
+
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
+          <h3>Songs played for weather</h3>
+          <Table dataSource={this.state.songsForWeatherResults} columns={songsForWeatherColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
+        </div>
+
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
+          <h3>Songs played for location on date</h3>
+          <Table dataSource={this.state.songsLocationDateResults} columns={songColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
         </div>
 
 

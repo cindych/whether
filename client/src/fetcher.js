@@ -7,6 +7,20 @@ const getAllSongs = async (page, pagesize, league) => {
     return res.json()
 }
 
+const getSongsForWeather= async (weather, location) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs/${weather}?location=${location}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+const getSongsLocationDate= async (location, date) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs/${location}&date=${date}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
 const getBasicPlaylist = async (location, weather) => {
     var res = await fetch(`http://${config.server_host}:${config.server_port}/playlist?location=${location}&weather=${weather}`, {
         method: 'GET',
@@ -14,12 +28,21 @@ const getBasicPlaylist = async (location, weather) => {
     return res.json()
 }
 
-const getSongAvgWeatherStat = async (statistic, location, weather) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/songAvgWeatherStat?statistic=${statistic}&location=${location}&weather=${weather}`, {
+const getSongStatsForWeather = async (statistic, location, weather) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songStatsForWeather?statistic=${statistic}&location=${location}&weather=${weather}`, {
         method: 'GET',
     })
     return res.json()
 }
+
+const getSongAvgWeatherStats = async (artist, title) => {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songAvgWeatherStats?artist=${artist}&title=${title}`, {
+        method: 'GET',
+    })
+    return res.json()
+}
+
+
 
 
 
@@ -81,7 +104,10 @@ const getPlayerSearch = async (name, nationality, club, rating_high, rating_low,
 export {
     getAllSongs,
     getBasicPlaylist,
-    getSongAvgWeatherStat,
+    getSongStatsForWeather,
+    getSongAvgWeatherStats,
+    getSongsForWeather,
+    getSongsLocationDate,
     
     getAllMatches,
     getAllPlayers,

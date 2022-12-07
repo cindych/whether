@@ -53,6 +53,181 @@ async function allSongs(req, res) {
     }
 }
 
+// return songs played for req.param.weather
+async function songsForWeather(req, res) {
+    if (req.params.weather === 'rainy') {
+        if (req.query.location === undefined || req.query.location == '') { // rainy, no location provided
+            connection.query(`
+            SELECT DISTINCT title, artist
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.precipitation > 0.1
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        } else { // rainy, location provided
+            connection.query(`
+            SELECT DISTINCT title, artist
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.precipitation > 0.1 AND ch.region = ${req.query.location}
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        }
+        
+    } else if (req.params.weather === 'sunny') {
+        if (req.query.location === undefined || req.query.location == '') { // sunny, no location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.precipitation < 0.1 AND w.temperature > 50
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        } else { // sunny, location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.precipitation < 0.1 AND w.temperature > 50 AND ch.region = ${req.query.location}
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        }
+
+        
+    } else if (req.params.weather === 'snowy') {
+        if (req.query.location === undefined || req.query.location == '') { // snowy, no location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.snowfall > 0.1
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        } else { // snowy, location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.snowfall > 0.1 AND ch.region = ${req.query.location}
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        }
+
+    } else if (req.params.weather === 'cloudy') {
+        if (req.query.location === undefined || req.query.location == '') { // cloudy, no location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.cloudiness > 400
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        } else { // cloudy, location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.cloudiness > 400 AND ch.region = ${req.query.location}
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        }
+
+    } else if (req.params.weather === 'windy') {
+        if (req.query.location === undefined || req.query.location == '') { // windy, no location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.Wind_Speed > 20
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        } else { // windy, location provided
+            connection.query(`
+            SELECT DISTINCT title, artist, region
+            FROM Charts ch JOIN Weather w ON ch.date = w.Date
+            WHERE w.Wind_Speed > 20 AND ch.region = ${req.query.location}
+            `, function (error, results, fields) {
+                if (error) {
+                    console.log(error)
+                    res.json({ error: error })
+                } else if (results) {
+                    res.json({ results: results })
+                }
+            });
+        }
+        
+    }
+}
+
+// get all songs played on query date in given location
+async function songsLocationDate(req, res) {
+    // location must be one of the following: 
+        // africa, argentina, australia, brazil, canada, chile, france, germany,
+        // greece, japan, mexico, south korea, spain, ukraine, united states
+    // date format must be "yyyy-mm-dd"
+
+
+    connection.query(`
+    SELECT DISTINCT title, artist, id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration
+    FROM Songs NATURAL JOIN Charts
+    WHERE ch.region=${req.param.location} AND ch.date=${req.query.date}
+    `, function (error, results, fields) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+  
+}
+
+
 
 // get basic playlist
 async function basicPlaylist(req, res) {
@@ -126,7 +301,7 @@ async function basicPlaylist(req, res) {
 }
 
 // get min, max, and avg query stat for songs played on days with query weather
-async function songAvgWeatherStat(req, res) {
+async function songStatsForWeather(req, res) {
     // song statistic must be one of the following:
         // acousticness, danceability, energy, instrumentalness,
         // speechiness, liveness, loudness, mode, tempo, valence, duration
@@ -195,6 +370,33 @@ async function songAvgWeatherStat(req, res) {
     }
   
 }
+
+
+// get avg weather stats for query song
+async function songAvgWeatherStats(req, res) {
+    // song query must include title and artist, formatted correctly
+    // some leeway is given to title (query checks Like% instead of =) but must be mostly correct
+    // if multiple artists, at least one must be included
+    // optional location?
+
+    connection.query(`
+    SELECT AVG(w.precipitation), AVG(temperature), AVG(snowfall)
+    FROM Charts ch JOIN Weather w ON ch.date = w.Date
+    WHERE ch.artist LIKE '%${req.query.artist}%' AND ch.title LIKE '${req.query.title}%'
+    `, function (error, results, fields) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+
+}
+
+
+
+
 
 
 
@@ -514,7 +716,10 @@ async function search_players(req, res) {
 module.exports = {
     allSongs, 
     basicPlaylist,
-    songAvgWeatherStat,
+    songStatsForWeather,
+    songAvgWeatherStats,
+    songsForWeather,
+    songsLocationDate,
 
     hello,
     jersey,

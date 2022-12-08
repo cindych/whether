@@ -2,13 +2,21 @@ import React from 'react';
 import {
   Table,
   Pagination,
-  Select
+  Select,
+  Row,
+  Col,
+  Divider,
 } from 'antd'
+
+import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress } from "shards-react";
 
 import MenuBar from '../components/MenuBar';
 import { getAllMatches, getAllPlayers, 
   getAllSongs, getBasicPlaylist, 
-  getSongStatsForWeather, getSongAvgWeatherStats, getSongsForWeather, getSongsLocationDate } from '../fetcher'
+  getSongStatsForWeather, getSongAvgWeatherStats, 
+  getSongsForWeather, getSongsLocationDate, 
+  getSongsAttrHighLow, getSongsAttrThresholdWeather,
+  getSongInfo } from '../fetcher'
 const { Column, ColumnGroup } = Table;
 const { Option } = Select;
 
@@ -256,11 +264,28 @@ class HomePage extends React.Component {
       songWeatherStatResults: [],
       songsForWeatherResults: [],
       songsLocationDateResults: [],
+      songsAttrHighLowResults: [],
+      songsThresholdWeatherResults: [],
+      songInfoResults: [],
+
+
+      playlistRegion: "Argentina", // Argentina is default value, update state if user changes this
+      playlistWeather: "rainy", // rainy is default, update state if user alters 
+
+      titleQuery: "Still Got Time", 
+      artistQuery: "ZAYN",
+
       pagination: null  
     }
 
     this.leagueOnChange = this.leagueOnChange.bind(this)
     this.goToMatch = this.goToMatch.bind(this)
+
+    this.playlistRegionOnChange = this.playlistRegionOnChange.bind(this)
+    this.playlistWeatherOnChange = this.playlistWeatherOnChange.bind(this)
+    this.handleTitleQueryChange = this.handleTitleQueryChange.bind(this)
+    this.handleArtistQueryChange = this.handleArtistQueryChange.bind(this)
+    this.updateSearchResults = this.updateSearchResults.bind(this)
   }
 
 
@@ -271,10 +296,50 @@ class HomePage extends React.Component {
   leagueOnChange(value) {
     // TASK 2: this value should be used as a parameter to call getAllMatches in fetcher.js with the parameters page and pageSize set to null
     // then, matchesResults in state should be set to the results returned - see a similar function call in componentDidMount()
+    
+    // this is what handles options! from the menu select below for all matches, 
+    // this then takes the selected option and feeds that into the function
+    // (this is how you can pass params into your various things)
+    
     getAllMatches(null, null, value).then(res => {
       this.setState({ matchesResults: res.results })
     })
   }
+
+  playlistRegionOnChange(value) {
+    this.setState({ playlistRegion: value })
+    getBasicPlaylist(value, this.state.playlistWeather).then(res => {
+      console.log(res.results)
+      this.setState({ playlistResults: res.results })
+    })
+  }
+
+  playlistWeatherOnChange(value) {
+    this.setState({ playlistWeather: value})
+
+    getBasicPlaylist(this.state.playlistRegion, value).then(res => {
+      console.log(res.results)
+      this.setState({ playlistResults: res.results })
+    })
+  }
+
+  handleTitleQueryChange(event) {
+    this.setState({ titleQuery: event.target.value })
+  }
+
+  handleArtistQueryChange(event) {
+    this.setState({ artistQuery: event.target.value })
+
+  }
+
+  updateSearchResults() {
+    //TASK 11: call getMatchSearch and update matchesResults in state. See componentDidMount() for a hint
+    getSongInfo(this.state.titleQuery, this.state.artistQuery).then(res => {
+        this.setState({ songInfoResults: res.results })
+    })
+
+}
+
 
   componentDidMount() {
     getAllMatches(null, null, 'D1').then(res => {
@@ -306,12 +371,12 @@ class HomePage extends React.Component {
       this.setState({ songStatResults: res.results })
     })
 
-    getSongAvgWeatherStats('ZAYN', 'Still Got Time').then(res => {
+    getSongAvgWeatherStats(this.state.artistQuery, this.state.titleQuery).then(res => {
       console.log(res.results)
       this.setState({ songWeatherStatResults: res.results })
     })
 
-    getSongsForWeather('windy', ).then(res => {
+    getSongsForWeather('windy', "").then(res => {
       console.log(res.results)
       this.setState({ songsForWeatherResults: res.results })
     })
@@ -319,6 +384,16 @@ class HomePage extends React.Component {
     getSongsLocationDate('Spain', '2018-06-15').then(res => {
       console.log(res.results)
       this.setState({ songsLocationDateResults: res.results })
+    })
+
+    getSongsAttrHighLow('liveness', 'high').then(res => {
+      console.log(res.results)
+      this.setState({ songsAttrHighLowResults: res.results })
+    })
+
+    getSongsAttrThresholdWeather('danceability', 'rainy', '0.2', '0.6').then(res => {
+      console.log(res.results)
+      this.setState({ songThresHoldWeatherResults: res.results})
     })
   }
 
@@ -343,10 +418,7 @@ class HomePage extends React.Component {
           <Table dataSource={this.state.songStatResults} columns={songStatColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
         </div>
 
-        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
-          <h3>Average weather stats for song</h3>
-          <Table dataSource={this.state.songWeatherStatResults} columns={songWeatherStatColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
-        </div>
+        
 
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
           <h3>Songs played for weather</h3>
@@ -358,12 +430,113 @@ class HomePage extends React.Component {
           <Table dataSource={this.state.songsLocationDateResults} columns={songColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
         </div>
 
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
+          <h3>Songs with high or low attribute</h3>
+          <Table dataSource={this.state.songsAttrHighLowResults} columns={songColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
+        </div>
+
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
+          <h3>Songs with attribute within threshold for given weather</h3>
+          <Table dataSource={this.state.songsThresholdWeatherResults} columns={songColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
+        </div>
+
+
+
+
+
+
 
 
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
           <h3>Players</h3>
           <Table dataSource={this.state.playersResults} columns={playerColumns} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}/>
         </div>
+
+
+
+
+
+        {/* playlist with select test below; this should be basic homepage */}
+        {/* all of the other queries that have "return LIST of songs for whatever" should go into custom playlist page */}
+
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
+          <h3>Playlist with select test</h3>
+          <Select defaultValue="Argentina" style={{ width: 120 }} onChange={this.playlistRegionOnChange}>
+            <Option value="Africa">Africa</Option>
+            <Option value="Argentina">Argentina</Option>
+            <Option value="Australia">Australia</Option>
+            <Option value="Brazil">Brazil</Option>
+            <Option value="Canada">Canada</Option>
+            <Option value="Chile">Chile</Option>
+            <Option value="France">France</Option>
+            <Option value="Germany">Germany</Option>
+            <Option value="Greece">Greece</Option>
+            <Option value="Japan">Japan</Option>
+            <Option value="Mexico">Mexico</Option>
+            <Option value="South Korea">South Korea</Option>
+            <Option value="Spain">Spain</Option>
+            <Option value="Ukraine">Ukraine</Option>
+            <Option value="United States">United States</Option>
+          </Select>
+
+          <Select defaultValue="rainy" style={{ width: 120 }} onChange={this.playlistWeatherOnChange}>
+            <Option value="rainy">Rainy</Option>
+            <Option value="snowy">Snowy</Option>
+            <Option value="sunny">Sunny</Option>
+          </Select>
+          
+          <Table onRow={(record, rowIndex) => {
+    return {
+      onClick: event => { } // set click row event here - go to song specific page? 
+      // maybe for single song page let's show 
+      // - all attrs in spotify table,
+      // - avg weather stats on the days it was played, show overall and group by location?
+      //    - (do this in two tables: one for "overall weather stats", and one for "weather stats by location")
+      // onClick: event => {this.goToMatch(record.MatchId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
+    };
+  }} dataSource={this.state.playlistResults} columns={playlistColumns} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
+          </Table>
+
+        </div>
+
+
+
+
+        {/* individual song info test below */}
+
+        <Form style={{ width: '80vw', margin: '0 auto', marginTop: '5vh' }}>
+                    <Row>
+                        <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
+                            <label>Title</label>
+                            <FormInput placeholder="Title" value={this.state.titleQuery} onChange={this.handleTitleQueryChange} />
+                        </FormGroup></Col>
+                        <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
+                            <label>Artist</label>
+                            <FormInput placeholder="Artist" value={this.state.artistQuery} onChange={this.handleArtistQueryChange} />
+                        </FormGroup></Col>
+                        <Col flex={2}><FormGroup style={{ width: '10vw' }}>
+                            <Button style={{ marginTop: '4vh' }} onClick={this.updateSearchResults}>Search</Button>
+                        </FormGroup></Col>
+
+                    </Row>
+
+
+        </Form>
+
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
+          <h3>Song info for {this.state.titleQuery} by {this.state.artistQuery}</h3>
+          <Table dataSource={this.state.songInfoResults} columns={songColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 20, showQuickJumper:true }}/>
+        </div>
+
+        <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
+          <h3>Average weather stats for {this.state.titleQuery} by {this.state.artistQuery}</h3>
+          <Table dataSource={this.state.songWeatherStatResults} columns={songWeatherStatColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 10, showQuickJumper:true }}/>
+        </div>
+        {/* add a group by location option for above if it works*/}
+
+
+
+
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
           <h3>Matches</h3>
           <Select defaultValue="D1" style={{ width: 120 }} onChange={this.leagueOnChange}>
@@ -380,7 +553,7 @@ class HomePage extends React.Component {
     return {
       onClick: event => {this.goToMatch(record.MatchId)}, // clicking a row takes the user to a detailed view of the match in the /matches page using the MatchId parameter  
     };
-  }} dataSource={this.state.matchesResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
+  }} dataSource={this.state.matchesResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 10, showQuickJumper:true }}>
             <ColumnGroup title="Teams">
               {/* TASK 4: correct the title for the 'Home' column and add a similar column for 'Away' team in this ColumnGroup */}
               <Column title="Home" dataIndex="Home" key="Home" sorter= {(a, b) => a.Home.localeCompare(b.Home)}/>

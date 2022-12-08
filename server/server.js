@@ -14,6 +14,9 @@ app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
 // return all songs
 app.get('/allSongs', routes.allSongs)
 
+// get info for a given song. 
+app.get('/songs', routes.songInfo)
+
 // return all songs played on days with the specified weather condition
 // /songs/weather, optional location query (/songs/weather?location)
 app.get('/songs/:weather', routes.songsForWeather)
@@ -21,6 +24,13 @@ app.get('/songs/:weather', routes.songsForWeather)
 // return all songs played in a given region for the provided date (in query)
 // /songs/location?date
 app.get('/songs/:location', routes.songsLocationDate)
+
+// get all songs with request attribute, query high or low? (default high)
+// /songs/attribute?high (high will be true or false)
+app.get('/songs/:attribute', routes.songsAttrHighLow)
+
+// get songs with request attribute for weather within min and max thresholds (query params)
+app.get('/songs/:attribute/:weather', routes.songsAttrThresholdWeather)
 
 // get playlist of 10 songs based on default weather in some location
 // /playlist/location
@@ -31,6 +41,8 @@ app.get('/songAvgWeatherStats', routes.songAvgWeatherStats)
 
 // get min, max, and avg query stat for songs played on days with query weather
 app.get('/songStatsForWeather', routes.songStatsForWeather)
+
+
 
 
 // Route 1 - register as GET 

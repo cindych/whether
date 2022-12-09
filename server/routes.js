@@ -190,7 +190,7 @@ async function songsAttrThresholdWeather(req, res) {
     `
 
     if (req.params.weather === 'rainy') {
-        query += `AND PRECIPITATION > 0.1`
+        query += `AND w.precipitation > 0.1`
     } else if (req.params.weather === 'sunny') {
         query += `AND w.precipitation < 0.1 AND w.temperature > 50`
     } else if (req.params.weather === 'snowy') {
@@ -249,6 +249,7 @@ async function basicPlaylist(req, res) {
             WHERE region = '${req.query.location}')
         SELECT DISTINCT title, artist
         FROM regionSongs NATURAL JOIN weatherDays
+        ORDER BY RAND()
         LIMIT 10
         `
 

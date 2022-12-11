@@ -10,7 +10,6 @@ import {
 
 import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress } from "shards-react";
 
-import MenuBar from '../components/MenuBar';
 import { getSongAvgWeatherStats, getSongInfo } from '../fetcher'
 const { Column, ColumnGroup } = Table;
 const { Option } = Select;
@@ -218,7 +217,6 @@ class IndivSongPage extends React.Component {
 
     return (
       <div>
-        <MenuBar />
 
         {/* individual song info test below */}
 

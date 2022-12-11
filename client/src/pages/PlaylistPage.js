@@ -8,7 +8,6 @@ import {
   Divider,
 } from 'antd'
 
-import MenuBar from '../components/MenuBar';
 import { getBasicPlaylist, } from '../fetcher'
 const { Option } = Select;
 
@@ -78,7 +77,6 @@ class PlaylistPage extends React.Component {
 
     return (
       <div>
-        <MenuBar />
 
         {/* playlist with select test below; this should be basic homepage */}
         {/* all of the other queries that have "return LIST of songs for whatever" should go into custom playlist page */}

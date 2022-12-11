@@ -10,7 +10,6 @@ import {
 
 import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress } from "shards-react";
 
-import MenuBar from '../components/MenuBar';
 import { getAllMatches, getAllPlayers, 
   getAllSongs, getBasicPlaylist, 
   getSongStatsForWeather, getSongAvgWeatherStats, 
@@ -402,7 +401,6 @@ class HomePage extends React.Component {
 
     return (
       <div>
-        <MenuBar />
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
           <h3>Songs</h3>
           <Table dataSource={this.state.songsResults} columns={songColumns} pagination={{ pageSizeOptions:[10, 20, 50], defaultPageSize: 20, showQuickJumper:true }}/>

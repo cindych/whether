@@ -109,6 +109,50 @@ async function songsForWeather(req, res) {
     });
 }
 
+
+// return songs played for req.param.weather across multiple locations
+async function songsForWeatherMultLocations(req, res) {
+
+    var query = `
+    WITH weatherDays (date, location) AS (
+        SELECT date, Location \
+        FROM Weather \ `
+    if (req.params.weather === 'rainy') {
+        query += `WHERE PRECIPITATION > 0.1`
+    } else if (req.params.weather === 'sunny') {
+        query += `WHERE w.precipitation < 0.1 AND w.temperature > 50`
+    } else if (req.params.weather === 'snowy') {
+        query += `WHERE w.snowfall > 0.1`
+    } else if (req.params.weather === 'cloudy') {
+        query += `WHERE w.cloudiness > 400`
+    } else if (req.params.weather === 'windy') {
+        query += `WHERE w.Wind_Speed > 20 `
+    } 
+
+    query += `
+    \ 
+    ), weatherDayCts (title, artist, count) AS (
+        SELECT title, artist, COUNT(location)
+        FROM Chart ch JOIN Cities c ON ch.region = c.region 
+            JOIN weatherDays wd ON ch.date = wd.date AND c.city = wd.location
+        GROUP BY title, artist
+    )
+    SELECT title, artist
+    FROM weatherDayCts
+    WHERE count > 1`
+
+    connection.query(`
+    ${query}
+    `, function (error, results, fields) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+}
+
 // get all songs played on query date in given location, date is optional
 async function songsLocationDate(req, res) {
     // location must be one of the following: 
@@ -362,6 +406,54 @@ async function songAvgWeatherStats(req, res) {
     });
 }
 
+// return cities where average specified stat of songs played on weather days is above threshold
+async function cities(req, res) {
+
+    var query = `
+    WITH weatherSongs(location, ${req.params.attribute}) AS (
+        SELECT w.location, s.${req.params.attribute}
+        FROM Songs s JOIN Chart ch ON s.id = ch.id
+            JOIN Cities c ON c.region = ch.region
+            JOIN Weather w ON w.location = c.city AND w.date = ch.date
+        WHERE 
+    `
+    if (req.params.weather === 'rainy') {
+        query += ` w.precipitation > 0.1`
+    } else if (req.params.weather === 'sunny') {
+        query += ` w.precipitation < 0.1 AND w.temperature > 50`
+    } else if (req.params.weather === 'snowy') {
+        query += ` w.snowfall > 0.1`
+    } else if (req.params.weather === 'cloudy') {
+        query += ` w.cloudiness > 400`
+    } else if (req.params.weather === 'windy') {
+        query += ` w.Wind_Speed > 20`
+    } 
+
+    query += `
+    \
+    ), avgAttr(location, average) AS (
+        SELECT location, AVG(${req.params.attribute}) AS average
+        FROM weatherSongs
+        GROUP BY location
+    )
+    SELECT location
+    FROM avgAttr
+    WHERE average > ${req.params.threshold}`
+
+
+    connection.query(`
+    ${query}
+    `, function (error, results, fields) {
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
+
+}
+
 module.exports = {
     allSongs, 
     basicPlaylist,
@@ -371,5 +463,7 @@ module.exports = {
     songsLocationDate,
     songsAttrHighLow,
     songsAttrThresholdWeather,
-    songInfo
+    songInfo,
+    songsForWeatherMultLocations,
+    cities,
 }

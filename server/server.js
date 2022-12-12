@@ -21,6 +21,9 @@ app.get('/songs', routes.songInfo)
 // /songs/weather, optional location query (/songs/weather?location)
 app.get('/songs/:weather', routes.songsForWeather)
 
+// get songs played on days with specified weather across multiple locations 
+app.get('/songs/:weather/multlocations', routes.songsForWeatherMultLocations)
+
 // return all songs played in a given region for the provided date (in query)
 // /songs/location?date
 app.get('/songs/:location', routes.songsLocationDate)
@@ -41,6 +44,9 @@ app.get('/songAvgWeatherStats', routes.songAvgWeatherStats)
 
 // get min, max, and avg query stat for songs played on days with query weather
 app.get('/songStatsForWeather', routes.songStatsForWeather)
+
+// return cities where average specified stat of songs played on weather days is above threshold
+app.get('/cities/:attribute/:weather/:threshold', routes.cities)
 
 app.listen(config.server_port, () => {
     console.log(`Server running at http://${config.server_host}:${config.server_port}/`);

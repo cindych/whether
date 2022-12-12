@@ -7,15 +7,12 @@ import {
 } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
-import 'antd/dist/antd.css';
-
-import "bootstrap/dist/css/bootstrap.min.css";
-import "shards-ui/dist/css/shards.min.css"
 
 import Home from './pages/Home';
 import PlaylistPage from './pages/PlaylistPage';
 import IndivSongPage from './pages/IndivSongPage';
 import ExploreSongsPage from './pages/ExploreSongsPage';
+import IndivSong from './pages/IndivSong';
 
 ReactDOM.render(
   <div>
@@ -24,7 +21,7 @@ ReactDOM.render(
 		<Route exact
 								path="/"
 								render={() => (
-									<Home />
+									<IndivSong />
 								)}/>
         <Route exact
 							path="/homepage"

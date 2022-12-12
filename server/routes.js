@@ -54,12 +54,13 @@ async function allSongs(req, res) {
 }
 
 // get info of specified song
+// also possible to search for information on songs by a particular artist => e.g. artist = 'zayn' and title = ''
 async function songInfo(req, res) {
-
     connection.query(`
         SELECT DISTINCT title, artist, id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration
         FROM Songs NATURAL JOIN Chart
         WHERE artist LIKE '%${req.query.artist}%' AND title LIKE '${req.query.title}%'
+        ORDER BY title
         `, function (error, results, fields) {
             if (error) {
                 console.log(error)
@@ -336,8 +337,9 @@ async function songStatsForWeather(req, res) {
   
 }
 
-
-// get avg weather stats for query song
+// songAvgWeatherStats: get avg weather stats for query song
+// added group by to show avg weather stats for EACH song
+// e.g. to look for avg song stats of all songs by zayn, artist = 'zayn' and title = ''
 async function songAvgWeatherStats(req, res) {
     // song query must include title and artist, formatted correctly
     // some leeway is given to title (query checks Like% instead of =) but must be mostly correct
@@ -345,9 +347,11 @@ async function songAvgWeatherStats(req, res) {
     // optional location?
 
     connection.query(`
-    SELECT AVG(w.precipitation), AVG(temperature), AVG(snowfall)
+    SELECT artist, title, AVG(w.precipitation) AS avgPrecipitation, AVG(temperature) as avgTemp, AVG(snowfall) as avgSnowfall
     FROM Chart ch JOIN Weather w ON ch.date = w.Date
     WHERE ch.artist LIKE '%${req.query.artist}%' AND ch.title LIKE '${req.query.title}%'
+    GROUP BY artist, title
+    ORDER BY title
     `, function (error, results, fields) {
         if (error) {
             console.log(error)
@@ -356,335 +360,6 @@ async function songAvgWeatherStats(req, res) {
             res.json({ results: results })
         }
     });
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// ********************************************
-//            SIMPLE ROUTE EXAMPLE
-// ********************************************
-
-// Route 1 (handler)
-async function hello(req, res) {
-    // a GET request to /hello?name=Steve
-    if (req.query.name) {
-        res.send(`Hello, ${req.query.name}! Welcome to the FIFA server!`)
-    } else {
-        res.send(`Hello! Welcome to the FIFA server!`)
-    }
-}
-
-
-// ********************************************
-//                  WARM UP 
-// ********************************************
-
-// Route 2 (handler)
-async function jersey(req, res) {
-    const colors = ['red', 'blue', 'white']
-    const jersey_number = Math.floor(Math.random() * 20) + 1
-    const name = req.query.name ? req.query.name : "player"
-
-    if (req.params.choice === 'number') {
-        // TODO: TASK 1: inspect for issues and correct 
-        res.json({ message: `Hello, ${name}!`, jersey_number: jersey_number })
-    } else if (req.params.choice === 'color') {
-        var lucky_color_index = Math.floor(Math.random() * 2);
-        // TODO: TASK 2: change this or any variables above to return only 'red' or 'blue' at random (go Quakers!)
-        res.json({ message: `Hello, ${name}!`, jersey_color: colors[lucky_color_index] })
-    } else {
-        // TODO: TASK 3: inspect for issues and correct
-        res.json({ message: `Hello, ${name}, we like your jersey!` })
-    }
-}
-
-// ********************************************
-//               GENERAL ROUTES
-// ********************************************
-
-
-// Route 3 (handler)
-async function all_matches(req, res) {
-    const league = req.params.league ? req.params.league : 'D1'
-
-    if (req.query.page && !isNaN(req.query.page)) {
-
-        const page = req.query.page
-        const pagesize = req.query.pagesize ? req.query.pagesize: 10
-        const offset = (page - 1) * pagesize
-
-        connection.query(`
-        SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals
-        FROM Matches
-        WHERE Division = '${league}'
-        ORDER BY MatchId
-        LIMIT ${pagesize} OFFSET ${offset}
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        })
-   
-    } else {
-        connection.query(`SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals  
-        FROM Matches 
-        WHERE Division = '${league}'
-        ORDER BY HomeTeam, AwayTeam`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    }
-}
-
-// Route 4 (handler)
-async function all_players(req, res) {
-
-    // if page is defined
-    if (req.query.page && !isNaN(req.query.page)) {
-
-        // define page, pagesize (default 10), offset variables
-        const page = req.query.page
-        const pagesize = req.query.pagesize ? req.query.pagesize: 10
-        const offset = (page - 1) * pagesize
-    
-        connection.query(`
-        SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-        FROM Players
-        ORDER BY Name
-        LIMIT ${pagesize} OFFSET ${offset}
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        })
-
-    } else { // page is not defined
-        connection.query(`
-        SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-        FROM Players
-        ORDER BY Name
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    }
-
-}
-
-
-// ********************************************
-//             MATCH-SPECIFIC ROUTES
-// ********************************************
-
-// Route 5 (handler)
-async function match(req, res) {
-    
-    // TODO: TASK 6: implement and test, potentially writing your own (ungraded) tests
-
-    const id = req.query.id
-
-    // if id is not a number (either a word or not provided)
-    if (isNaN(id)) {
-        res.status(400).send("/matches id NaN")
-        return;
-    }
-
-    connection.query(`
-        SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals, HalfTimeGoalsH AS HTHomeGoals, HalfTimeGoalsA AS HTAwayGoals, ShotsH AS ShotsHome, ShotsA AS ShotsAway, ShotsOnTargetH AS ShotsOnTargetHome, ShotsOnTargetA AS ShotsOnTargetAway, FoulsH AS FoulsHome, FoulsA AS FoulsAway, CornersH AS CornersHome, CornersA AS CornersAway, YellowCardsH AS YCHome, YellowCardsA AS YCAway, RedCardsH AS RCHome, RedCardsA AS RCAway
-        FROM Matches
-        WHERE ${id}=MatchId
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results }) // will return [] if no results.
-            }
-    })
-  
-}
-
-// ********************************************
-//            PLAYER-SPECIFIC ROUTES
-// ********************************************
-
-// Route 6 (handler)
-async function player(req, res) {
-
-    const id = req.query.id
-
-    // if id is not a number (either a word or not provided)
-    if (isNaN(id)) {
-        res.status(400).send("/player id NaN")
-        return;
-    }
-
-    connection.query(`
-        SELECT PlayerId, Name, Age, Photo, Nationality, Flag, OverallRating AS Rating, Potential, Club, ClubLogo, Value, Wage, InternationalReputation, Skill, JerseyNumber, ContractValidUntil, Height, Weight, BestPosition, BestOverallRating, ReleaseClause, GKPenalties, GKDiving, GKHandling, GKKicking, GKPositioning, GKReflexes, NPassing, NBallControl, NAdjustedAgility, NStamina, NStrength, NPositioning
-        FROM Players
-        WHERE PlayerId=${id}
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                if (results.length == 0) { // player id was not found
-                    res.json({ results: results }) // will return [] if no results.
-                } else { // player was found
-                    if (results[0].BestPosition == "GK") {
-                        const GKSelect = results.map((
-                            {NPassing, 
-                             NBallControl, 
-                             NAdjustedAgility, 
-                             NStamina, 
-                             NStrength, 
-                             NPositioning, 
-                             ...rest}) => { return rest })
-                        res.json({ results: GKSelect })
-                    } else {
-                        const NSelect = results.map((
-                            {GKPenalties, 
-                             GKDiving, 
-                             GKHandling, 
-                             GKKicking, 
-                             GKPositioning, 
-                             GKReflexes,
-                             ...rest}) => { return rest })
-                        res.json({ results: NSelect })
-                    }
-                }
-    }});
-
-    // TODO: TASK 7: implement and test, potentially writing your own (ungraded) tests
-}
-
-
-// ********************************************
-//             SEARCH ROUTES
-// ********************************************
-
-// Route 7 (handler)
-async function search_matches(req, res) {
-    // TODO: TASK 8: implement and test, potentially writing your own (ungraded) tests
-    // IMPORTANT: in your SQL LIKE matching, use the %query% format to match the search query to substrings, not just the entire string
-
-    const home = req.query.Home ? req.query.Home: ""
-    const away = req.query.Away ? req.query.Away: ""
-    const page = req.query.page 
-    const pagesize = req.query.pagesize ? req.query.pagesize: 10
-    const offset = (page - 1) * pagesize
-
-    if (req.query.page && !isNaN(req.query.page)) { // if page parameter is given
-
-        connection.query(`
-        SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals
-        FROM Matches
-        WHERE HomeTeam LIKE '%${home}%' AND AwayTeam LIKE '%${away}%'
-        ORDER BY Home, Away
-        LIMIT ${pagesize} OFFSET ${offset}
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-    })} else { // page param is not given. return all results
-        connection.query(`
-        SELECT MatchId, Date, Time, HomeTeam AS Home, AwayTeam AS Away, FullTimeGoalsH AS HomeGoals, FullTimeGoalsA AS AwayGoals
-        FROM Matches
-        WHERE HomeTeam LIKE '%${home}%' AND AwayTeam LIKE '%${away}%'
-        ORDER BY Home, Away
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    }
-}
-
-// Route 8 (handler)
-async function search_players(req, res) {
-    // TODO: TASK 9: implement and test, potentially writing your own (ungraded) tests
-    // IMPORTANT: in your SQL LIKE matching, use the %query% format to match the search query to substrings, not just the entire string
-    
-    const name = req.query.Name ? req.query.Name: ""
-    const natl = req.query.Nationality ? req.query.Nationality: ""
-    const club = req.query.Club ? req.query.Club: ""
-    const rl = req.query.RatingLow ? req.query.RatingLow: 0
-    const rh = req.query.RatingHigh ? req.query.RatingHigh: 100
-    const pl = req.query.PotentialLow ? req.query.PotentialLow: 0
-    const ph = req.query.PotentialHigh ? req.query.PotentialHigh: 100
-    const page = req.query.page
-    const pagesize = req.query.pagesize ? req.query.pagesize: 10
-    const offset = (page - 1) * pagesize
-
-    if (req.query.page && !isNaN(req.query.page)) { // if page parameter is given
-
-        connection.query(`
-        SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-        FROM Players
-        WHERE Name LIKE '%${name}%' AND Nationality LIKE '%${natl}%' AND Club LIKE '%${club}%' AND ${rl}<=OverallRating AND OverallRating<=${rh} AND ${pl}<=Potential AND Potential<=${ph} 
-        LIMIT ${pagesize} OFFSET ${offset}
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-    })} else { // page param is not given. return all results
-        connection.query(`
-        SELECT PlayerId, Name, Nationality, OverallRating AS Rating, Potential, Club, Value
-        FROM Players
-        WHERE Name LIKE '%${name}%' AND Nationality LIKE '%${natl}%' AND Club LIKE '%${club}%' AND ${rl}<=OverallRating AND OverallRating<=${rh} AND ${pl}<=Potential AND Potential<=${ph} 
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
-    }
 }
 
 module.exports = {
@@ -696,14 +371,5 @@ module.exports = {
     songsLocationDate,
     songsAttrHighLow,
     songsAttrThresholdWeather,
-    songInfo,
-
-    hello,
-    jersey,
-    all_matches,
-    all_players,
-    match,
-    player,
-    search_matches,
-    search_players
+    songInfo
 }

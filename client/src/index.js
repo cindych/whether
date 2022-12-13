@@ -13,13 +13,19 @@ import IndivSongPage from './pages/IndivSongPage';
 import ExploreSongsPage from './pages/ExploreSongsPage';
 import IndivSong from './pages/IndivSong';
 import ExploreSongs from './pages/ExploreSongs';
+import Playlist from './pages/Playlist';
 
 ReactDOM.render(
   <div>
     <Router>
       <Switch>
-		<Route exact
+	  <Route exact
 								path="/"
+								render={() => (
+									<Playlist />
+								)}/>
+		<Route exact
+								path="/indivsong"
 								render={() => (
 									<IndivSong />
 								)}/>
@@ -28,25 +34,29 @@ ReactDOM.render(
 								render={() => (
 									<ExploreSongs />
 								)}/>
+
+
+
+								
         <Route exact
 							path="/homepage"
 							render={() => (
 								<HomePage />
 							)}/>
 		<Route exact
-							path="/playlist"
+							path="/playlistPage"
 							render={() => (
 								<PlaylistPage />
 							)}/>
 
 		<Route exact
-							path="/indivSong"
+							path="/indivSongPage"
 							render={() => (
 								<IndivSongPage />
 							)}/>
 
 		<Route exact
-							path="/exploreSongs"
+							path="/exploreSongsPage"
 							render={() => (
 								<ExploreSongsPage />
 							)}/>

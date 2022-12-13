@@ -54,7 +54,7 @@ function ExploreSongs() {
     const songsForWeatherColumns = [
         { id: 'title', label: 'Title' },
         { id: 'artist', label: 'Artist' },
-        { id: 'region', label: 'Region' }
+        // { id: 'region', label: 'Region' }
     ];
 
     const [songStatResults, setSongStatResults] = useState([]);
@@ -455,7 +455,7 @@ function ExploreSongs() {
                                 <TableRow key={row.title}>
                                     <TableCell>{row.title}</TableCell>
                                     <TableCell>{row.artist}</TableCell>
-                                    <TableCell>{row.region}</TableCell>
+                                    {/* <TableCell>{row.region}</TableCell> */}
                                 </TableRow>
                                 );
                             })}

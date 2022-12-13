@@ -18,7 +18,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import { getSongAvgWeatherStats, getAllSongs,
-         getSongStatsForWeather } from '../fetcher';
+         getSongStatsForWeather, getSongsForWeather } from '../fetcher';
 
 function ExploreSongs() {
     const [artist, setArtist] = useState('');
@@ -49,6 +49,12 @@ function ExploreSongs() {
         { id: 'min', label: 'Minimum' },
         { id: 'max', label: 'Maximum' },
         { id: 'avg', label: 'Average' }
+    ];
+
+    const songsForWeatherColumns = [
+        { id: 'title', label: 'Title' },
+        { id: 'artist', label: 'Artist' },
+        { id: 'region', label: 'Region' }
     ];
 
     const [songStatResults, setSongStatResults] = useState([]);
@@ -136,6 +142,34 @@ function ExploreSongs() {
             console.log(songStatsForWeatherResults.length)
         })
     }
+
+    const[songsForWeatherResults, setSongsForWeatherResults] = useState([])
+    const[songsForWeatherLocation, setSongsForWeatherLocation] = useState("")
+    const[songsForWeatherWeather, setSongsForWeatherWeather] = useState("windy")
+
+    const handleChangeSongsForWeatherLocation = e => {
+        setSongsForWeatherLocation(e.target.value);
+        getSongsForWeather(songsForWeatherWeather, e.target.value).then(res => {
+            setSongsForWeatherResults(res.results)
+            console.log(songsForWeatherResults)
+        })
+    }
+
+    const handleChangeSongsForWeatherWeather = e => {
+        setSongsForWeatherWeather(e.target.value)
+        getSongsForWeather(e.target.value, songsForWeatherLocation).then(res => {
+            setSongsForWeatherResults(res.results)
+            console.log(songsForWeatherResults)
+        })
+        console.log("songs for weather weather updated")
+    }
+
+    const handleSongsForWeather = () => {
+        getSongsForWeather(songsForWeatherWeather, songsForWeatherLocation).then(res => { 
+            setSongsForWeatherResults(res.results)
+            console.log(songsForWeatherResults)
+        })
+    };
     
 
     return (
@@ -337,6 +371,112 @@ function ExploreSongs() {
                         // onRowsPerPageChange={handleChangeRowsPerInfoPage}
                     />
                 </Paper>
+
+
+
+
+
+
+
+
+                {/* get songs played in a region for a particular weather */}
+                {/* calls songsForWeather(weather, location[region]) */}
+
+                <FormControl style={{minWidth: 120}}>
+                <InputLabel id="demo-simple-select-label">Region</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={songsForWeatherLocation}
+                    label="Age"
+                    onChange={handleChangeSongsForWeatherLocation}
+                >
+                    <MenuItem value={''}>All regions</MenuItem>
+                    <MenuItem value={'Africa'}>Africa</MenuItem>
+                    <MenuItem value={'Argentina'}>Argentina</MenuItem>
+                    <MenuItem value={'Australia'}>Australia</MenuItem>
+                    <MenuItem value={'Brazil'}>Brazil</MenuItem>
+                    <MenuItem value={'Canada'}>Canada</MenuItem>
+                    <MenuItem value={'Chile'}>Chile</MenuItem>
+                    <MenuItem value={'France'}>France</MenuItem>
+                    <MenuItem value={'Germany'}>Germany</MenuItem>
+                    <MenuItem value={'Greece'}>Greece</MenuItem>
+                    <MenuItem value={'Japan'}>Japan</MenuItem>
+                    <MenuItem value={'Mexico'}>Mexico</MenuItem>
+                    <MenuItem value={'South Korea'}>South Korea</MenuItem>
+                    <MenuItem value={'Spain'}>Spain</MenuItem>
+                    <MenuItem value={'Ukraine'}>Ukraine</MenuItem>
+                    <MenuItem value={'United States'}>United States</MenuItem>
+                </Select>
+                </FormControl>
+
+                <FormControl style={{minWidth: 120}}>
+                <InputLabel id="demo-simple-select-label">Weather</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={songsForWeatherWeather}
+                    label="Age"
+                    onChange={handleChangeSongsForWeatherWeather}
+                >
+                    <MenuItem value={'rainy'}>Rainy</MenuItem>
+                    <MenuItem value={'snowy'}>Snowy</MenuItem>
+                    <MenuItem value={'sunny'}>Sunny</MenuItem>
+                    <MenuItem value={'cloudy'}>Cloudy</MenuItem>
+                    <MenuItem value={'windy'}>Windy</MenuItem>
+                </Select>
+                </FormControl>
+
+                <div style={{ margin: '0 auto', marginTop: '1%'}}>
+                    <Button variant="outlined" onClick={handleSongsForWeather}>Get Songs Played For Weather</Button>
+                </div>
+
+                <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                    <Typography align="center" variant="h5"> Songs played in {songsForWeatherLocation ? songsForWeatherLocation : "all regions"} when the weather was {songsForWeatherWeather}</Typography>
+                    <TableContainer sx={{ height: "40%" }}>
+                        <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                            {songsForWeatherColumns.map((column) => (
+                                <TableCell
+                                key={column.id}
+                                align={column.align}
+                                >
+                                {column.label}
+                                </TableCell>
+                            ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {songsForWeatherResults
+                            .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                            .map((row) => {
+                                return (
+                                <TableRow key={row.title}>
+                                    <TableCell>{row.title}</TableCell>
+                                    <TableCell>{row.artist}</TableCell>
+                                    <TableCell>{row.region}</TableCell>
+                                </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={songInfoResults.length}
+                        rowsPerPage={rowsPerInfoPage}
+                        page={infoPage}
+                        onPageChange={handleChangeInfoPage}
+                        onRowsPerPageChange={handleChangeRowsPerInfoPage}
+                    />
+                </Paper>
+
+
+
+
+
 
 
 

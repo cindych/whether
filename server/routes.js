@@ -328,7 +328,7 @@ async function songStatsForWeather(req, res) {
                 JOIN Weather w ON w.location = c.city AND w.date = ch.date
             WHERE w.precipitation > 0.1 AND c.region = '${req.query.location}'
         )
-        SELECT MIN(${req.query.statistic}), MAX(${req.query.statistic}), AVG(${req.query.statistic})
+        SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
         FROM Songs s
         WHERE s.id IN (SELECT * FROM regionWeatherSongs)
         `, function (error, results, fields) {
@@ -347,7 +347,7 @@ async function songStatsForWeather(req, res) {
                 JOIN Weather w ON w.location = c.city AND w.date = ch.date
             WHERE w.snowfall > 0.1 AND c.region = '${req.query.location}'
         )
-        SELECT MIN(${req.query.statistic}), MAX(${req.query.statistic}), AVG(${req.query.statistic})
+        SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
         FROM Songs s
         WHERE s.id IN (SELECT * FROM regionWeatherSongs)
         `, function (error, results, fields) {
@@ -366,7 +366,7 @@ async function songStatsForWeather(req, res) {
                 JOIN Weather w ON w.location = c.city AND w.date = ch.date
             WHERE w.precipitation < 0.1 AND w.temperature > 50 AND c.region = '${req.query.location}'
         )
-        SELECT MIN(${req.query.statistic}), MAX(${req.query.statistic}), AVG(${req.query.statistic})
+        SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
         FROM Songs s
         WHERE s.id IN (SELECT * FROM regionWeatherSongs)
         `, function (error, results, fields) {

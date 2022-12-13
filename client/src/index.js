@@ -8,11 +8,11 @@ import {
 
 import HomePage from './pages/HomePage';
 
-import Home from './pages/Home';
 import PlaylistPage from './pages/PlaylistPage';
 import IndivSongPage from './pages/IndivSongPage';
 import ExploreSongsPage from './pages/ExploreSongsPage';
 import IndivSong from './pages/IndivSong';
+import ExploreSongs from './pages/ExploreSongs';
 
 ReactDOM.render(
   <div>
@@ -22,6 +22,11 @@ ReactDOM.render(
 								path="/"
 								render={() => (
 									<IndivSong />
+								)}/>
+		<Route exact
+								path="/explore"
+								render={() => (
+									<ExploreSongs />
 								)}/>
         <Route exact
 							path="/homepage"
@@ -41,7 +46,7 @@ ReactDOM.render(
 							)}/>
 
 		<Route exact
-							path="/explore"
+							path="/exploreSongs"
 							render={() => (
 								<ExploreSongsPage />
 							)}/>

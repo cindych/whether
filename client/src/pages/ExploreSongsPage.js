@@ -10,7 +10,7 @@ import {
 
 import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress } from "shards-react";
 
-import MenuBar from '../components/MenuBar';
+// import MenuBar from '../components/MenuBar';
 import { getAllMatches, getAllPlayers, 
   getAllSongs, getBasicPlaylist, 
   getSongStatsForWeather, getSongAvgWeatherStats, 
@@ -349,7 +349,7 @@ class ExploreSongsPage extends React.Component {
 
     return (
       <div>
-        <MenuBar />
+        {/* <MenuBar /> */}
 
         {/* add a hide additional info button? so show only title/artist instead*/}
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>

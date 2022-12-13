@@ -1,6 +1,6 @@
 import config from './config.json'
 
-const getAllSongs = async (page, pagesize, league) => {
+const getAllSongs = async () => {
     var res = await fetch(`http://${config.server_host}:${config.server_port}/allSongs`, {
         method: 'GET',
     })

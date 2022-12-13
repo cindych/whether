@@ -118,15 +118,15 @@ async function songsForWeatherMultLocations(req, res) {
         SELECT date, Location \
         FROM Weather \ `
     if (req.params.weather === 'rainy') {
-        query += `WHERE PRECIPITATION > 0.1`
+        query += `WHERE precipitation > 0.1`
     } else if (req.params.weather === 'sunny') {
-        query += `WHERE w.precipitation < 0.1 AND w.temperature > 50`
+        query += `WHERE precipitation < 0.1 AND temperature > 50`
     } else if (req.params.weather === 'snowy') {
-        query += `WHERE w.snowfall > 0.1`
+        query += `WHERE snowfall > 0.1`
     } else if (req.params.weather === 'cloudy') {
-        query += `WHERE w.cloudiness > 400`
+        query += `WHERE cloudiness > 400`
     } else if (req.params.weather === 'windy') {
-        query += `WHERE w.Wind_Speed > 20 `
+        query += `WHERE Wind_Speed > 20 `
     } 
 
     query += `

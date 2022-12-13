@@ -18,7 +18,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
 import { getSongAvgWeatherStats, getAllSongs,
-         getSongStatsForWeather, getSongsForWeather } from '../fetcher';
+         getSongStatsForWeather, getSongsForWeather,
+         getSongsForWeatherMultLocations } from '../fetcher';
 
 function ExploreSongs() {
     const [artist, setArtist] = useState('');
@@ -169,7 +170,26 @@ function ExploreSongs() {
             setSongsForWeatherResults(res.results)
             console.log(songsForWeatherResults)
         })
-    };
+    }
+
+
+    const[songsForWeatherMultLocationsResults, setSongsForWeatherMultLocationsResults] = useState([])
+    const[songsForWeatherMultLocationsWeather, setSongsForWeatherMultLocationsWeather] = useState("rainy")
+
+    const handleSongsForWeatherMultLocations = () => {
+        getSongsForWeatherMultLocations(songsForWeatherMultLocationsWeather).then(res => {
+            setSongsForWeatherMultLocationsResults(res.results)
+            console.log(songsForWeatherMultLocationsResults)
+        })
+    }
+
+    const handleChangeSongsForWeatherMultLocationsWeather = e => {
+        setSongsForWeatherMultLocationsWeather(e.target.value)
+        getSongsForWeatherMultLocations(e.target.value).then(res => {
+            setSongsForWeatherMultLocationsResults(res.results)
+            console.log(songsForWeatherMultLocationsResults)
+        })
+    }
     
 
     return (
@@ -202,6 +222,7 @@ function ExploreSongs() {
             </FormControl>
 
             <div className="results">
+
                 {/* table containing info for all songs */}
                 {/* calls getAllSongs() */}
                 <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
@@ -257,6 +278,9 @@ function ExploreSongs() {
                         onRowsPerPageChange={handleChangeRowsPerInfoPage}
                     />
                 </Paper>
+
+
+
 
 
                 {/* get the min, max, and average song stat for songs played in a given region with a particular weather */}
@@ -472,6 +496,89 @@ function ExploreSongs() {
                         onRowsPerPageChange={handleChangeRowsPerInfoPage}
                     />
                 </Paper>
+
+
+
+
+
+                {/* get songs played in given region for text field date (yyyy-mm-dd) */}
+                {/* calls songsForWeather(weather, location[region]) */}
+
+
+
+
+
+
+                {/* get songs played for a given weather across multiple locations */}
+                {/* calls songsForWeatherMultLocations(weather) */}
+
+                <FormControl style={{minWidth: 120}}>
+                <InputLabel id="demo-simple-select-label">Weather</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={songsForWeatherMultLocationsWeather}
+                    label="Age"
+                    onChange={handleChangeSongsForWeatherMultLocationsWeather}
+                >
+                    <MenuItem value={'rainy'}>Rainy</MenuItem>
+                    <MenuItem value={'snowy'}>Snowy</MenuItem>
+                    <MenuItem value={'sunny'}>Sunny</MenuItem>
+                    <MenuItem value={'cloudy'}>Cloudy</MenuItem>
+                    <MenuItem value={'windy'}>Windy</MenuItem>
+                </Select>
+                </FormControl>
+
+                <div style={{ margin: '0 auto', marginTop: '1%'}}>
+                    <Button variant="outlined" onClick={handleSongsForWeatherMultLocations}>Get Songs For Weather (Multiple Locations)</Button>
+                </div>
+
+                <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                    <Typography align="center" variant="h5"> Songs played on {songsForWeatherMultLocationsWeather} days across multiple locations</Typography>
+                    <TableContainer sx={{ height: "40%" }}>
+                        <Table stickyHeader aria-label="sticky table">
+                        <TableHead>
+                            <TableRow>
+                            {songsForWeatherColumns.map((column) => (
+                                <TableCell
+                                key={column.id}
+                                align={column.align}
+                                >
+                                {column.label}
+                                </TableCell>
+                            ))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {songsForWeatherMultLocationsResults
+                            .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                            .map((row) => {
+                                return (
+                                <TableRow key={row.title}>
+                                    <TableCell>{row.title}</TableCell>
+                                    <TableCell>{row.artist}</TableCell>
+                                </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                        </Table>
+                    </TableContainer>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={songsForWeatherMultLocationsResults.length}
+                        rowsPerPage={rowsPerInfoPage}
+                        page={infoPage}
+                        onPageChange={handleChangeInfoPage}
+                        onRowsPerPageChange={handleChangeRowsPerInfoPage}
+                    />
+                </Paper>
+
+
+
+
+
+
 
 
 

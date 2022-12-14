@@ -223,12 +223,12 @@ async function songsAttrThresholdWeather(req, res) {
         // speechiness, liveness, loudness, mode, tempo, valence, duration
     // high/low is named high, takes values true or false
 
-    const min = req.query.minThreshold ? req.query.minThreshold: 0
+    const min = !isNaN(req.query.minThreshold) ? req.query.minThreshold: 0
 
-    const max = req.query.maxThreshold ? req.query.maxThreshold: 1
+    const max = !isNaN(req.query.maxThreshold) ? req.query.maxThreshold: 1
 
     var query = `
-    SELECT * 
+    SELECT DISTINCT title, artist, s.id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration 
     FROM Songs s JOIN Chart ch ON s.id = ch.id
         JOIN Weather w ON w.Date = ch.date
     WHERE ${req.params.attribute} >= ${min} AND ${req.params.attribute} <= ${max}

@@ -16,10 +16,12 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Slider from '@mui/material/Slider';
 
 import { getSongAvgWeatherStats, getAllSongs,
          getSongStatsForWeather, getSongsForWeather,
-         getSongsForWeatherMultLocations } from '../fetcher';
+         getSongsForWeatherMultLocations,
+         getSongsAttrThresholdWeather } from '../fetcher';
 
 function ExploreSongs() {
     const [artist, setArtist] = useState('');
@@ -190,6 +192,46 @@ function ExploreSongs() {
             console.log(songsForWeatherMultLocationsResults)
         })
     }
+
+    const[songsAttrThresholdWeatherResults, setSongsAttrThresholdWeatherResults] = useState([])
+    const[songsAttrThresholdWeatherAttr, setSongsAttrThresholdWeatherAttr] = useState("danceability")
+    const[songsAttrThresholdWeatherWeather, setSongsAttrThresholdWeatherWeather] = useState("rainy")
+    const[songsAttrThresholdWeatherMin, setSongsAttrThresholdWeatherMin] = useState(0.2)
+    const[songsAttrThresholdWeatherMax, setSongsAttrThresholdWeatherMax] = useState(0.7)
+
+    const handleSongsAttrThresholdWeather = () => {
+        getSongsAttrThresholdWeather(songsAttrThresholdWeatherAttr, songsAttrThresholdWeatherWeather, songsAttrThresholdWeatherMin, songsAttrThresholdWeatherMax).then(res => {
+            setSongsAttrThresholdWeatherResults(res.results)
+            console.log(songsAttrThresholdWeatherResults)
+        })
+    }
+
+    const handleChangeSongsAttrThresholdWeatherAttr = e => {
+        setSongsAttrThresholdWeatherAttr(e.target.value)
+        getSongsAttrThresholdWeather(e.target.value, songsAttrThresholdWeatherWeather, songsAttrThresholdWeatherMin, songsAttrThresholdWeatherMax).then(res => {
+            setSongsAttrThresholdWeatherResults(res.results)
+            console.log(songsAttrThresholdWeatherResults)
+        })
+        console.log(e.target.value)
+    }
+
+    const handleChangeSongsAttrThresholdWeatherWeather = e => {
+        setSongsAttrThresholdWeatherWeather(e.target.value)
+        getSongsAttrThresholdWeather(songsAttrThresholdWeatherAttr, e.target.value, songsAttrThresholdWeatherMin, songsAttrThresholdWeatherMax).then(res => {
+            setSongsAttrThresholdWeatherResults(res.results)
+            console.log(songsAttrThresholdWeatherResults)
+        })
+        console.log(e.target.value)
+    }
+
+    const handleChangeSongsAttrThresholdWeatherThreshold = e => {
+        setSongsAttrThresholdWeatherMin(e.target.value[0])
+        setSongsAttrThresholdWeatherMax(e.target.value[1])
+        getSongsAttrThresholdWeather(songsAttrThresholdWeatherAttr, songsAttrThresholdWeatherWeather, e.target.value[0], e.target.value[1]).then(res => {
+            setSongsAttrThresholdWeatherResults(res.results)
+            console.log(songsAttrThresholdWeatherResults)
+        })
+    }
     
 
     return (
@@ -225,414 +267,459 @@ function ExploreSongs() {
 
                 {/* table containing info for all songs */}
                 {/* calls getAllSongs() */}
-                <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                    <Typography align="center" variant="h5"> 🎶 All Songs 🎶</Typography>
-                    <TableContainer sx={{ height: "40%" }}>
-                        <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {infoColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songInfoResults
-                            .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.id}>
-                                    <TableCell>{row.artist}</TableCell>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.id}</TableCell>
-                                    <TableCell>{row.acousticness}</TableCell>
-                                    <TableCell>{row.danceability}</TableCell>
-                                    <TableCell>{row.energy}</TableCell>
-                                    <TableCell>{row.instrumentalness}</TableCell>
-                                    <TableCell>{row.speechiness}</TableCell>
-                                    <TableCell>{row.liveness}</TableCell>
-                                    <TableCell>{row.loudness}</TableCell>
-                                    <TableCell>{row.mode}</TableCell>
-                                    <TableCell>{row.tempo}</TableCell>
-                                    <TableCell>{row.valence}</TableCell>
-                                    <TableCell>{row.key_track}</TableCell>
-                                    <TableCell>{row.duration}</TableCell>
+                <div className='allSongs()'>
+                    <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                        <Typography align="center" variant="h5"> 🎶 All Songs 🎶</Typography>
+                        <TableContainer sx={{ height: "40%" }}>
+                            <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                {infoColumns.map((column) => (
+                                    <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    >
+                                    {column.label}
+                                    </TableCell>
+                                ))}
                                 </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={songInfoResults.length}
-                        rowsPerPage={rowsPerInfoPage}
-                        page={infoPage}
-                        onPageChange={handleChangeInfoPage}
-                        onRowsPerPageChange={handleChangeRowsPerInfoPage}
-                    />
-                </Paper>
-
-
-
-
+                            </TableHead>
+                            <TableBody>
+                                {songInfoResults
+                                .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                .map((row) => {
+                                    return (
+                                    <TableRow key={row.id}>
+                                        <TableCell>{row.artist}</TableCell>
+                                        <TableCell>{row.title}</TableCell>
+                                        <TableCell>{row.id}</TableCell>
+                                        <TableCell>{row.acousticness}</TableCell>
+                                        <TableCell>{row.danceability}</TableCell>
+                                        <TableCell>{row.energy}</TableCell>
+                                        <TableCell>{row.instrumentalness}</TableCell>
+                                        <TableCell>{row.speechiness}</TableCell>
+                                        <TableCell>{row.liveness}</TableCell>
+                                        <TableCell>{row.loudness}</TableCell>
+                                        <TableCell>{row.mode}</TableCell>
+                                        <TableCell>{row.tempo}</TableCell>
+                                        <TableCell>{row.valence}</TableCell>
+                                        <TableCell>{row.key_track}</TableCell>
+                                        <TableCell>{row.duration}</TableCell>
+                                    </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={songInfoResults.length}
+                            rowsPerPage={rowsPerInfoPage}
+                            page={infoPage}
+                            onPageChange={handleChangeInfoPage}
+                            onRowsPerPageChange={handleChangeRowsPerInfoPage}
+                        />
+                    </Paper>
+                </div>
 
                 {/* get the min, max, and average song stat for songs played in a given region with a particular weather */}
                 {/* calls songStatsForWeather(attribute, location[region], weather) */}
-                <FormControl style={{minWidth: 120}}>
-                <InputLabel id="demo-simple-select-label">Song attribute</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={songStatsForWeatherAttr}
-                    label="Age"
-                    onChange={handleChangeSongStatsForWeatherAttr}
-                >
-                    <MenuItem value={'acousticness'}>Accousticness</MenuItem>
-                    <MenuItem value={'danceability'}>Danceability</MenuItem>
-                    <MenuItem value={'energy'}>Energy</MenuItem>
-                    <MenuItem value={'instrumentalness'}>Instrumentalness</MenuItem>
-                    <MenuItem value={'speechiness'}>Speechiness</MenuItem>
-                    <MenuItem value={'liveness'}>Liveliness</MenuItem>
-                    <MenuItem value={'loudness'}>Loudness</MenuItem>
-                    <MenuItem value={'mode'}>Mode</MenuItem>
-                    <MenuItem value={'tempo'}>Tempo</MenuItem>
-                    <MenuItem value={'valence'}>Valence</MenuItem>
-                    <MenuItem value={'duration'}>Duration</MenuItem>
-                </Select>
-                </FormControl>
 
-                <FormControl style={{minWidth: 120}}>
-                <InputLabel id="demo-simple-select-label">Region</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={songStatsForWeatherLocation}
-                    label="Age"
-                    onChange={handleChangeSongStatsForWeatherLocation}
-                >
-                    <MenuItem value={'Africa'}>Africa</MenuItem>
-                    <MenuItem value={'Argentina'}>Argentina</MenuItem>
-                    <MenuItem value={'Australia'}>Australia</MenuItem>
-                    <MenuItem value={'Brazil'}>Brazil</MenuItem>
-                    <MenuItem value={'Canada'}>Canada</MenuItem>
-                    <MenuItem value={'Chile'}>Chile</MenuItem>
-                    <MenuItem value={'France'}>France</MenuItem>
-                    <MenuItem value={'Germany'}>Germany</MenuItem>
-                    <MenuItem value={'Greece'}>Greece</MenuItem>
-                    <MenuItem value={'Japan'}>Japan</MenuItem>
-                    <MenuItem value={'Mexico'}>Mexico</MenuItem>
-                    <MenuItem value={'South Korea'}>South Korea</MenuItem>
-                    <MenuItem value={'Spain'}>Spain</MenuItem>
-                    <MenuItem value={'Ukraine'}>Ukraine</MenuItem>
-                    <MenuItem value={'United States'}>United States</MenuItem>
-                </Select>
-                </FormControl>
+                <div className='songStatsForWeather(attr, location, weather)'>
+                    <FormControl style={{minWidth: 120}}>
+                    <InputLabel id="demo-simple-select-label">Song attribute</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={songStatsForWeatherAttr}
+                        label="Age"
+                        onChange={handleChangeSongStatsForWeatherAttr}
+                    >
+                        <MenuItem value={'acousticness'}>Accousticness</MenuItem>
+                        <MenuItem value={'danceability'}>Danceability</MenuItem>
+                        <MenuItem value={'energy'}>Energy</MenuItem>
+                        <MenuItem value={'instrumentalness'}>Instrumentalness</MenuItem>
+                        <MenuItem value={'speechiness'}>Speechiness</MenuItem>
+                        <MenuItem value={'liveness'}>Liveliness</MenuItem>
+                        <MenuItem value={'loudness'}>Loudness</MenuItem>
+                        <MenuItem value={'mode'}>Mode</MenuItem>
+                        <MenuItem value={'tempo'}>Tempo</MenuItem>
+                        <MenuItem value={'valence'}>Valence</MenuItem>
+                        <MenuItem value={'duration'}>Duration</MenuItem>
+                    </Select>
+                    </FormControl>
 
-                <FormControl style={{minWidth: 120}}>
-                <InputLabel id="demo-simple-select-label">Weather</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={songStatsForWeatherWeather}
-                    label="Age"
-                    onChange={handleChangeSongStatsForWeatherWeather}
-                >
-                    <MenuItem value={'rainy'}>Rainy</MenuItem>
-                    <MenuItem value={'snowy'}>Snowy</MenuItem>
-                    <MenuItem value={'sunny'}>Sunny</MenuItem>
-                </Select>
-                </FormControl>
+                    <FormControl style={{minWidth: 120}}>
+                    <InputLabel id="demo-simple-select-label">Region</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={songStatsForWeatherLocation}
+                        label="Age"
+                        onChange={handleChangeSongStatsForWeatherLocation}
+                    >
+                        <MenuItem value={'Africa'}>Africa</MenuItem>
+                        <MenuItem value={'Argentina'}>Argentina</MenuItem>
+                        <MenuItem value={'Australia'}>Australia</MenuItem>
+                        <MenuItem value={'Brazil'}>Brazil</MenuItem>
+                        <MenuItem value={'Canada'}>Canada</MenuItem>
+                        <MenuItem value={'Chile'}>Chile</MenuItem>
+                        <MenuItem value={'France'}>France</MenuItem>
+                        <MenuItem value={'Germany'}>Germany</MenuItem>
+                        <MenuItem value={'Greece'}>Greece</MenuItem>
+                        <MenuItem value={'Japan'}>Japan</MenuItem>
+                        <MenuItem value={'Mexico'}>Mexico</MenuItem>
+                        <MenuItem value={'South Korea'}>South Korea</MenuItem>
+                        <MenuItem value={'Spain'}>Spain</MenuItem>
+                        <MenuItem value={'Ukraine'}>Ukraine</MenuItem>
+                        <MenuItem value={'United States'}>United States</MenuItem>
+                    </Select>
+                    </FormControl>
 
-                <div style={{ margin: '0 auto', marginTop: '1%'}}>
-                    <Button variant="outlined" onClick={handleSongStatsForWeather}>Get Song Stats For Weather</Button>
-                </div>
+                    <FormControl style={{minWidth: 120}}>
+                    <InputLabel id="demo-simple-select-label">Weather</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={songStatsForWeatherWeather}
+                        label="Age"
+                        onChange={handleChangeSongStatsForWeatherWeather}
+                    >
+                        <MenuItem value={'rainy'}>Rainy</MenuItem>
+                        <MenuItem value={'snowy'}>Snowy</MenuItem>
+                        <MenuItem value={'sunny'}>Sunny</MenuItem>
+                    </Select>
+                    </FormControl>
 
-                <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                    <Typography align="center" variant="h5"> Min, max, and average {songStatsForWeatherAttr} for songs played in {songStatsForWeatherLocation} on {songStatsForWeatherWeather} days</Typography>
-                    <TableContainer sx={{ height: "40%" }}>
-                        <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {songStatsColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songStatsForWeatherResults
-                            .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.min}>
-                                    <TableCell>{row.min}</TableCell>
-                                    <TableCell>{row.max}</TableCell>
-                                    <TableCell>{row.avg}</TableCell>
+                    <div style={{ margin: '0 auto', marginTop: '1%'}}>
+                        <Button variant="outlined" onClick={handleSongStatsForWeather}>Get Song Stats For Weather</Button>
+                    </div>
+
+                    <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                        <Typography align="center" variant="h5"> Min, max, and average {songStatsForWeatherAttr} for songs played in {songStatsForWeatherLocation} on {songStatsForWeatherWeather} days</Typography>
+                        <TableContainer sx={{ height: "40%" }}>
+                            <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                {songStatsColumns.map((column) => (
+                                    <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    >
+                                    {column.label}
+                                    </TableCell>
+                                ))}
                                 </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        // rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={songStatsForWeatherResults.length}
-                        // rowsPerPage={rowsPerInfoPage}
-                        // page={infoPage}
-                        // onPageChange={handleChangeInfoPage}
-                        // onRowsPerPageChange={handleChangeRowsPerInfoPage}
-                    />
-                </Paper>
-
-
-
-
-
-
-
+                            </TableHead>
+                            <TableBody>
+                                {songStatsForWeatherResults
+                                .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                .map((row) => {
+                                    return (
+                                    <TableRow key={row.min}>
+                                        <TableCell>{row.min}</TableCell>
+                                        <TableCell>{row.max}</TableCell>
+                                        <TableCell>{row.avg}</TableCell>
+                                    </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            // rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={songStatsForWeatherResults.length}
+                            // rowsPerPage={rowsPerInfoPage}
+                            // page={infoPage}
+                            // onPageChange={handleChangeInfoPage}
+                            // onRowsPerPageChange={handleChangeRowsPerInfoPage}
+                        />
+                    </Paper>
+                </div>
 
                 {/* get songs played in a region for a particular weather */}
                 {/* calls songsForWeather(weather, location[region]) */}
+                <div className='songsForWeather(weather, location)'>
+                    <FormControl style={{minWidth: 120}}>
+                    <InputLabel id="demo-simple-select-label">Region</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={songsForWeatherLocation}
+                        label="Age"
+                        onChange={handleChangeSongsForWeatherLocation}
+                    >
+                        <MenuItem value={''}>All regions</MenuItem>
+                        <MenuItem value={'Africa'}>Africa</MenuItem>
+                        <MenuItem value={'Argentina'}>Argentina</MenuItem>
+                        <MenuItem value={'Australia'}>Australia</MenuItem>
+                        <MenuItem value={'Brazil'}>Brazil</MenuItem>
+                        <MenuItem value={'Canada'}>Canada</MenuItem>
+                        <MenuItem value={'Chile'}>Chile</MenuItem>
+                        <MenuItem value={'France'}>France</MenuItem>
+                        <MenuItem value={'Germany'}>Germany</MenuItem>
+                        <MenuItem value={'Greece'}>Greece</MenuItem>
+                        <MenuItem value={'Japan'}>Japan</MenuItem>
+                        <MenuItem value={'Mexico'}>Mexico</MenuItem>
+                        <MenuItem value={'South Korea'}>South Korea</MenuItem>
+                        <MenuItem value={'Spain'}>Spain</MenuItem>
+                        <MenuItem value={'Ukraine'}>Ukraine</MenuItem>
+                        <MenuItem value={'United States'}>United States</MenuItem>
+                    </Select>
+                    </FormControl>
 
-                <FormControl style={{minWidth: 120}}>
-                <InputLabel id="demo-simple-select-label">Region</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={songsForWeatherLocation}
-                    label="Age"
-                    onChange={handleChangeSongsForWeatherLocation}
-                >
-                    <MenuItem value={''}>All regions</MenuItem>
-                    <MenuItem value={'Africa'}>Africa</MenuItem>
-                    <MenuItem value={'Argentina'}>Argentina</MenuItem>
-                    <MenuItem value={'Australia'}>Australia</MenuItem>
-                    <MenuItem value={'Brazil'}>Brazil</MenuItem>
-                    <MenuItem value={'Canada'}>Canada</MenuItem>
-                    <MenuItem value={'Chile'}>Chile</MenuItem>
-                    <MenuItem value={'France'}>France</MenuItem>
-                    <MenuItem value={'Germany'}>Germany</MenuItem>
-                    <MenuItem value={'Greece'}>Greece</MenuItem>
-                    <MenuItem value={'Japan'}>Japan</MenuItem>
-                    <MenuItem value={'Mexico'}>Mexico</MenuItem>
-                    <MenuItem value={'South Korea'}>South Korea</MenuItem>
-                    <MenuItem value={'Spain'}>Spain</MenuItem>
-                    <MenuItem value={'Ukraine'}>Ukraine</MenuItem>
-                    <MenuItem value={'United States'}>United States</MenuItem>
-                </Select>
-                </FormControl>
+                    <FormControl style={{minWidth: 120}}>
+                    <InputLabel id="demo-simple-select-label">Weather</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={songsForWeatherWeather}
+                        label="Age"
+                        onChange={handleChangeSongsForWeatherWeather}
+                    >
+                        <MenuItem value={'rainy'}>Rainy</MenuItem>
+                        <MenuItem value={'snowy'}>Snowy</MenuItem>
+                        <MenuItem value={'sunny'}>Sunny</MenuItem>
+                        <MenuItem value={'cloudy'}>Cloudy</MenuItem>
+                        <MenuItem value={'windy'}>Windy</MenuItem>
+                    </Select>
+                    </FormControl>
 
-                <FormControl style={{minWidth: 120}}>
-                <InputLabel id="demo-simple-select-label">Weather</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={songsForWeatherWeather}
-                    label="Age"
-                    onChange={handleChangeSongsForWeatherWeather}
-                >
-                    <MenuItem value={'rainy'}>Rainy</MenuItem>
-                    <MenuItem value={'snowy'}>Snowy</MenuItem>
-                    <MenuItem value={'sunny'}>Sunny</MenuItem>
-                    <MenuItem value={'cloudy'}>Cloudy</MenuItem>
-                    <MenuItem value={'windy'}>Windy</MenuItem>
-                </Select>
-                </FormControl>
+                    <div style={{ margin: '0 auto', marginTop: '1%'}}>
+                        <Button variant="outlined" onClick={handleSongsForWeather}>Get Songs Played For Weather</Button>
+                    </div>
 
-                <div style={{ margin: '0 auto', marginTop: '1%'}}>
-                    <Button variant="outlined" onClick={handleSongsForWeather}>Get Songs Played For Weather</Button>
+                    <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                        <Typography align="center" variant="h5"> Songs played in {songsForWeatherLocation ? songsForWeatherLocation : "all regions"} when the weather was {songsForWeatherWeather}</Typography>
+                        <TableContainer sx={{ height: "40%" }}>
+                            <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                {songsForWeatherColumns.map((column) => (
+                                    <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    >
+                                    {column.label}
+                                    </TableCell>
+                                ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {songsForWeatherResults
+                                .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                .map((row) => {
+                                    return (
+                                    <TableRow key={row.title}>
+                                        <TableCell>{row.title}</TableCell>
+                                        <TableCell>{row.artist}</TableCell>
+                                        {/* <TableCell>{row.region}</TableCell> */}
+                                    </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={songInfoResults.length}
+                            rowsPerPage={rowsPerInfoPage}
+                            page={infoPage}
+                            onPageChange={handleChangeInfoPage}
+                            onRowsPerPageChange={handleChangeRowsPerInfoPage}
+                        />
+                    </Paper>
                 </div>
 
-                <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                    <Typography align="center" variant="h5"> Songs played in {songsForWeatherLocation ? songsForWeatherLocation : "all regions"} when the weather was {songsForWeatherWeather}</Typography>
-                    <TableContainer sx={{ height: "40%" }}>
-                        <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {songsForWeatherColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songsForWeatherResults
-                            .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.title}>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.artist}</TableCell>
-                                    {/* <TableCell>{row.region}</TableCell> */}
-                                </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={songInfoResults.length}
-                        rowsPerPage={rowsPerInfoPage}
-                        page={infoPage}
-                        onPageChange={handleChangeInfoPage}
-                        onRowsPerPageChange={handleChangeRowsPerInfoPage}
-                    />
-                </Paper>
-
-
-
-
-
                 {/* get songs played in given region for text field date (yyyy-mm-dd) */}
-                {/* calls songsForWeather(weather, location[region]) */}
+                {/* calls songsLocationDate(location, date) */}
 
 
 
 
 
+                {/* get songs played for a weather within the given threshold */}
+                {/* calls songsAttrThresholdWeather(attr, weather, minThreshold, maxThreshold) */}
+                <div className='songsAttrThresholdWeather(attr, weather, min, max)'>
+
+                    <FormControl style={{minWidth: 120}}>
+                        <InputLabel id="demo-simple-select-label">Song attribute</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={songsAttrThresholdWeatherAttr}
+                            label="Age"
+                            onChange={handleChangeSongsAttrThresholdWeatherAttr}
+                        >
+                            <MenuItem value={'acousticness'}>Accousticness</MenuItem>
+                            <MenuItem value={'danceability'}>Danceability</MenuItem>
+                            <MenuItem value={'energy'}>Energy</MenuItem>
+                            <MenuItem value={'instrumentalness'}>Instrumentalness</MenuItem>
+                            <MenuItem value={'speechiness'}>Speechiness</MenuItem>
+                            <MenuItem value={'liveness'}>Liveliness</MenuItem>
+                            <MenuItem value={'loudness'}>Loudness</MenuItem>
+                            <MenuItem value={'mode'}>Mode</MenuItem>
+                            <MenuItem value={'tempo'}>Tempo</MenuItem>
+                            <MenuItem value={'valence'}>Valence</MenuItem>
+                            <MenuItem value={'duration'}>Duration</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    <FormControl style={{minWidth: 120}}>
+                        <InputLabel id="demo-simple-select-label">Weather</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={songsAttrThresholdWeatherWeather}
+                            label="Age"
+                            onChange={handleChangeSongsAttrThresholdWeatherWeather}
+                        >
+                            <MenuItem value={'rainy'}>Rainy</MenuItem>
+                            <MenuItem value={'snowy'}>Snowy</MenuItem>
+                            <MenuItem value={'sunny'}>Sunny</MenuItem>
+                            <MenuItem value={'cloudy'}>Cloudy</MenuItem>
+                            <MenuItem value={'windy'}>Windy</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    <Slider
+                    getAriaLabel={() => 'Temperature range'}
+                    value={[songsAttrThresholdWeatherMin, songsAttrThresholdWeatherMax]}
+                    onChange={handleChangeSongsAttrThresholdWeatherThreshold}
+                    valueLabelDisplay="auto"
+                    />
+
+                    <div style={{ margin: '0 auto', marginTop: '1%'}}>
+                        <Button variant="outlined" onClick={handleSongsAttrThresholdWeather}>Get Songs With Attribute Within Threshold For Weather</Button>
+                    </div>
+
+                    <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                        <Typography align="center" variant="h5"> Songs with {songsAttrThresholdWeatherAttr} between {songsAttrThresholdWeatherMin} and {songsAttrThresholdWeatherMax} played on {songsAttrThresholdWeatherWeather} days</Typography>
+                        <TableContainer sx={{ height: "40%" }}>
+                            <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                {infoColumns.map((column) => (
+                                    <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    >
+                                    {column.label}
+                                    </TableCell>
+                                ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {songsAttrThresholdWeatherResults
+                                .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                .map((row) => {
+                                    return (
+                                    <TableRow key={row.id}>
+                                        <TableCell>{row.artist}</TableCell>
+                                        <TableCell>{row.title}</TableCell>
+                                        <TableCell>{row.id}</TableCell>
+                                        <TableCell>{row.acousticness}</TableCell>
+                                        <TableCell>{row.danceability}</TableCell>
+                                        <TableCell>{row.energy}</TableCell>
+                                        <TableCell>{row.instrumentalness}</TableCell>
+                                        <TableCell>{row.speechiness}</TableCell>
+                                        <TableCell>{row.liveness}</TableCell>
+                                        <TableCell>{row.loudness}</TableCell>
+                                        <TableCell>{row.mode}</TableCell>
+                                        <TableCell>{row.tempo}</TableCell>
+                                        <TableCell>{row.valence}</TableCell>
+                                        <TableCell>{row.key_track}</TableCell>
+                                        <TableCell>{row.duration}</TableCell>
+                                    </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={songsAttrThresholdWeatherResults.length}
+                            rowsPerPage={rowsPerInfoPage}
+                            page={infoPage}
+                            onPageChange={handleChangeInfoPage}
+                            onRowsPerPageChange={handleChangeRowsPerInfoPage}
+                        />
+                    </Paper>
+
+
+                </div>
 
                 {/* get songs played for a given weather across multiple locations */}
                 {/* calls songsForWeatherMultLocations(weather) */}
 
-                <FormControl style={{minWidth: 120}}>
-                <InputLabel id="demo-simple-select-label">Weather</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={songsForWeatherMultLocationsWeather}
-                    label="Age"
-                    onChange={handleChangeSongsForWeatherMultLocationsWeather}
-                >
-                    <MenuItem value={'rainy'}>Rainy</MenuItem>
-                    <MenuItem value={'snowy'}>Snowy</MenuItem>
-                    <MenuItem value={'sunny'}>Sunny</MenuItem>
-                    <MenuItem value={'cloudy'}>Cloudy</MenuItem>
-                    <MenuItem value={'windy'}>Windy</MenuItem>
-                </Select>
-                </FormControl>
+                <div className='songsForWeatherMultLocations(weather)'>
+                    <FormControl style={{minWidth: 120}}>
+                    <InputLabel id="demo-simple-select-label">Weather</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={songsForWeatherMultLocationsWeather}
+                        label="Age"
+                        onChange={handleChangeSongsForWeatherMultLocationsWeather}
+                    >
+                        <MenuItem value={'rainy'}>Rainy</MenuItem>
+                        <MenuItem value={'snowy'}>Snowy</MenuItem>
+                        <MenuItem value={'sunny'}>Sunny</MenuItem>
+                        <MenuItem value={'cloudy'}>Cloudy</MenuItem>
+                        <MenuItem value={'windy'}>Windy</MenuItem>
+                    </Select>
+                    </FormControl>
 
-                <div style={{ margin: '0 auto', marginTop: '1%'}}>
-                    <Button variant="outlined" onClick={handleSongsForWeatherMultLocations}>Get Songs For Weather (Multiple Locations)</Button>
+                    <div style={{ margin: '0 auto', marginTop: '1%'}}>
+                        <Button variant="outlined" onClick={handleSongsForWeatherMultLocations}>Get Songs For Weather (Multiple Locations)</Button>
+                    </div>
+
+                    <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                        <Typography align="center" variant="h5"> Songs played on {songsForWeatherMultLocationsWeather} days across multiple locations</Typography>
+                        <TableContainer sx={{ height: "40%" }}>
+                            <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                                <TableRow>
+                                {songsForWeatherColumns.map((column) => (
+                                    <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    >
+                                    {column.label}
+                                    </TableCell>
+                                ))}
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {songsForWeatherMultLocationsResults
+                                .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                .map((row) => {
+                                    return (
+                                    <TableRow key={row.title}>
+                                        <TableCell>{row.title}</TableCell>
+                                        <TableCell>{row.artist}</TableCell>
+                                    </TableRow>
+                                    );
+                                })}
+                            </TableBody>
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 10, 25]}
+                            component="div"
+                            count={songsForWeatherMultLocationsResults.length}
+                            rowsPerPage={rowsPerInfoPage}
+                            page={infoPage}
+                            onPageChange={handleChangeInfoPage}
+                            onRowsPerPageChange={handleChangeRowsPerInfoPage}
+                        />
+                    </Paper>
                 </div>
-
-                <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                    <Typography align="center" variant="h5"> Songs played on {songsForWeatherMultLocationsWeather} days across multiple locations</Typography>
-                    <TableContainer sx={{ height: "40%" }}>
-                        <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {songsForWeatherColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songsForWeatherMultLocationsResults
-                            .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.title}>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.artist}</TableCell>
-                                </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={songsForWeatherMultLocationsResults.length}
-                        rowsPerPage={rowsPerInfoPage}
-                        page={infoPage}
-                        onPageChange={handleChangeInfoPage}
-                        onRowsPerPageChange={handleChangeRowsPerInfoPage}
-                    />
-                </Paper>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-           
-                <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                    <Typography align="center" variant="h5">Weather Statistics ☂️</Typography>
-                    <TableContainer sx={{ height: "40%" }}>
-                        <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {statColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songStatResults
-                            .slice(statPage * rowsPerStatPage, statPage * rowsPerStatPage + rowsPerStatPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.id}>
-                                    <TableCell>{row.artist}</TableCell>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.avgPrecipitation}</TableCell>
-                                    <TableCell>{row.avgTemp}</TableCell>
-                                    <TableCell>{row.avgSnowfall}</TableCell>
-                                </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[5, 10, 25]}
-                        component="div"
-                        count={songStatResults.length}
-                        rowsPerPage={rowsPerStatPage}
-                        page={statPage}
-                        onPageChange={handleChangeStatPage}
-                        onRowsPerPageChange={handleChangeRowsPerStatPage}
-                    />
-                </Paper>
+                
             </div>
         </div>
     );

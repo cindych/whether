@@ -19,12 +19,12 @@ import Typography from '@mui/material/Typography';
 import { basicColumns, region, weather } from './options';
 import { getSongsForWeatherMultLocations, getSongsForWeather } from '../../fetcher';
 
-const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuItem>);
+const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
 export default function SongsForRegionWeatherComponent() {
-    const [weather, setWeather] = React.useState('');
     const [region, setRegion] = React.useState('all');
+    const [weather, setWeather] = React.useState('');
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
@@ -47,7 +47,7 @@ export default function SongsForRegionWeatherComponent() {
         setInfoPage(0);
     }
 
-    // useEffect runs on load + whenever weather, attribute, range are updated
+    // useEffect runs on load + whenever weather, region are updated
     useEffect(() => {
         console.log(weather, region);
         // TODO: add loading options

@@ -23,6 +23,11 @@ export const attributeColumns = [
 
 export const basicColumns = [
     { id: 'title', label: 'Title' },
-    { id: 'artist', label: 'Artist' },
-    // { id: 'region', label: 'Region' }
+    { id: 'artist', label: 'Artist' }
+];
+
+export const statsColumns = [
+    { id: 'min', label: 'Minimum' },
+    { id: 'max', label: 'Maximum' },
+    { id: 'avg', label: 'Average' }
 ];

@@ -22,24 +22,24 @@ import {
 } from '../../fetcher';
 import { attribute, attributeColumns, weather } from './options';
 
-const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 const attributeOptions = attribute.map((item) => <MenuItem value={item}>{item}</MenuItem>);
+const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
 export default function SongsForAttributeWeatherComponent() {
-    const [weather, setWeather] = React.useState('');
     const [attribute, setAttribute] = React.useState('');
+    const [weather, setWeather] = React.useState('');
     const [range, setRange] = React.useState([0, 1]);
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
     const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5);
 
-    const weatherOnChange = (event) => {
-        setWeather(event.target.value);
-    };
-
     const attributeOnChange = (event) => {
         setAttribute(event.target.value);
+    };
+
+    const weatherOnChange = (event) => {
+        setWeather(event.target.value);
     };
 
     const handleSliderChange = (event, newValue) => {
@@ -60,17 +60,17 @@ export default function SongsForAttributeWeatherComponent() {
         console.log(weather, attribute, range);
         // TODO: add loading options
 
-        if (weather === '' && attribute === '') {
+        if (attribute === '' &&weather === '') {
             getAllSongs().then(res => {
                 setSongInfoResults(res.results);
             });
-        } else if (weather !== '' && attribute !== '') {
+        } else if (attribute !== '' && weather !== '') {
             console.log('help');
             getSongsAttrThresholdWeather(attribute, weather, range[0], range[1]).then(res => {
                 setSongInfoResults(res.results);
             });
         }
-    }, [weather, attribute, range]);
+    }, [attribute, range, weather]);
 
     return (
         <Container maxWidth="sm">

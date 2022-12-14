@@ -6,6 +6,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import Slider from '@mui/material/Slider';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -22,8 +23,8 @@ import {
 
 
 // TODO: fill out all options and maybe export to data?
-const weather = ['Rainy', 'Sunny'];
-const attribute = ['Acousticness', 'Danceability'];
+const weather = ['rainy', 'sunny'];
+const attribute = ['acousticness', 'danceability'];
 const regionOptions = ['all', 'africa'];
 
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>)
@@ -35,9 +36,7 @@ const attributeOptions = attribute.map((item) => <MenuItem value={item}>{item}</
 export default function SongsForAttributeWeatherComponent() {
     const [weather, setWeather] = React.useState('');
     const [attribute, setAttribute] = React.useState('');
-    const [aMin, setAMin] = React.useState(0);
-    const [aMax, setAMax] = React.useState(100);
-
+    const [range, setRange] = React.useState([0, 1]);
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
@@ -68,6 +67,10 @@ export default function SongsForAttributeWeatherComponent() {
         setAttribute(event.target.value);
     };
 
+    const handleSliderChange = (event, newValue) => {
+        setRange(newValue);
+    };
+
     const handleChangeInfoPage = (e, newPage) => {
         setInfoPage(newPage);
     }
@@ -79,20 +82,20 @@ export default function SongsForAttributeWeatherComponent() {
 
     // useEffect runs on load + whenever the component state is updated
     useEffect(() => {
-        console.log(weather, attribute, aMin, aMax);
+        console.log(weather, attribute, range);
         // TODO: only use getAllSongs if nothing selected
-        if (weather == '' && attribute == '') {
+        if (weather === '' && attribute === '') {
             getAllSongs().then(res => {
                 setSongInfoResults(res.results);
                 // TODO: remove console.log
                 // console.log(songInfoResults)
                 // console.log(songInfoResults.length)
             });
-        } else if (weather != '' && attribute != '') {
+        } else if (weather !== '' && attribute !== '') {
             console.log('help');
-            getSongsAttrThresholdWeather(attribute, weather, aMin, aMax).then(res => {
+            getSongsAttrThresholdWeather(attribute, weather, range[0], range[1]).then(res => {
                 setSongInfoResults(res.results);
-                console.log(songInfoResults);
+                console.log(res.results);
             });
         }
     });
@@ -127,6 +130,15 @@ export default function SongsForAttributeWeatherComponent() {
                         {attributeOptions}
                     </Select>
                 </FormControl>
+                {/* TODO adjust slider functionality */}
+                <Slider
+                    getAriaLabel={() => 'Attribute Range'}
+                    value={range}
+                    onChange={handleSliderChange}
+                    valueLabelDisplay="auto"
+                    min={0}
+                    max={1}
+                />
             </Box>
             <Paper>
                 {/* <Typography align="center" variant="h5"> 🎶 All Songs 🎶</Typography> */}

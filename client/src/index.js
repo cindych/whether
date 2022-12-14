@@ -16,53 +16,49 @@ import ExploreSongs from './pages/ExploreSongs';
 import Playlist from './pages/Playlist';
 
 ReactDOM.render(
-  <div>
-    <Router>
-      <Switch>
-	  <Route exact
-								path="/"
-								render={() => (
-									<Playlist />
-								)}/>
-		<Route exact
-								path="/indivsong"
-								render={() => (
-									<IndivSong />
-								)}/>
-		<Route exact
-								path="/explore"
-								render={() => (
-									<ExploreSongs />
-								)}/>
+	<div>
+		<Router>
+			<Switch>
+				<Route exact
+					path="/"
+					render={() => (
+						<Playlist />
+					)} />
+				<Route exact
+					path="/indivsong"
+					render={() => (
+						<IndivSong />
+					)} />
+				<Route exact
+					path="/explore"
+					render={() => (
+						<ExploreSongs />
+					)} />
+				<Route exact
+					path="/homepage"
+					render={() => (
+						<HomePage />
+					)} />
 
-
-
-								
-        <Route exact
-							path="/homepage"
-							render={() => (
-								<HomePage />
-							)}/>
-		<Route exact
-							path="/playlistPage"
-							render={() => (
-								<PlaylistPage />
-							)}/>
-
-		<Route exact
-							path="/indivSongPage"
-							render={() => (
-								<IndivSongPage />
-							)}/>
-
-		<Route exact
-							path="/exploreSongsPage"
-							render={() => (
-								<ExploreSongsPage />
-							)}/>
-      </Switch>
-    </Router>
-  </div>,
-  document.getElementById('root')
+// below are old pages with react components TODO: delete when done
+				<Route exact
+					path="/playlistPage"
+					render={() => (
+						<PlaylistPage />
+					)} />
+				<Route exact
+					path="/indivSongPage"
+					render={() => (
+						<IndivSongPage />
+					)} />
+				<Route exact
+					path="/exploreSongsPage"
+					render={() => (
+						<ExploreSongsPage />
+					)} />
+			</Switch>
+		</Router>
+	</div>,
+	document.getElementById('root')
 );
 

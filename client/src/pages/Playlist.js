@@ -27,7 +27,7 @@ function Playlist() {
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
-    const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5); 
+    const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5);
     const infoColumns = [
         { id: 'artist', label: 'Artist' },
         { id: 'title', label: 'Title' },
@@ -48,7 +48,7 @@ function Playlist() {
 
     const [songStatResults, setSongStatResults] = useState([]);
     const [statPage, setStatPage] = React.useState(0);
-    const [rowsPerStatPage, setRowsPerStatPage] = React.useState(5); 
+    const [rowsPerStatPage, setRowsPerStatPage] = React.useState(5);
     const statColumns = [
         { id: 'artist', label: 'Artist' },
         { id: 'title', label: 'Title' },
@@ -98,55 +98,55 @@ function Playlist() {
             console.log(playlistResults)
         })
     }
-    
+
     return (
         <div className="playlist-page">
-            <FormControl style={{minWidth: 120}}>
-            <InputLabel id="demo-simple-select-label">Region</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={playlistRegion}
-                label="Age"
-                onChange={handleChangePlaylistRegion}
-            >
-                {/* <MenuItem value={''}>All regions</MenuItem> */}
-                <MenuItem value={'Africa'}>Africa</MenuItem>
-                <MenuItem value={'Argentina'}>Argentina</MenuItem>
-                <MenuItem value={'Australia'}>Australia</MenuItem>
-                <MenuItem value={'Brazil'}>Brazil</MenuItem>
-                <MenuItem value={'Canada'}>Canada</MenuItem>
-                <MenuItem value={'Chile'}>Chile</MenuItem>
-                <MenuItem value={'France'}>France</MenuItem>
-                <MenuItem value={'Germany'}>Germany</MenuItem>
-                <MenuItem value={'Greece'}>Greece</MenuItem>
-                <MenuItem value={'Japan'}>Japan</MenuItem>
-                <MenuItem value={'Mexico'}>Mexico</MenuItem>
-                <MenuItem value={'South Korea'}>South Korea</MenuItem>
-                <MenuItem value={'Spain'}>Spain</MenuItem>
-                <MenuItem value={'Ukraine'}>Ukraine</MenuItem>
-                <MenuItem value={'United States'}>United States</MenuItem>
-            </Select>
+            <FormControl style={{ minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Region</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={playlistRegion}
+                    label="Age"
+                    onChange={handleChangePlaylistRegion}
+                >
+                    {/* <MenuItem value={''}>All regions</MenuItem> */}
+                    <MenuItem value={'Africa'}>Africa</MenuItem>
+                    <MenuItem value={'Argentina'}>Argentina</MenuItem>
+                    <MenuItem value={'Australia'}>Australia</MenuItem>
+                    <MenuItem value={'Brazil'}>Brazil</MenuItem>
+                    <MenuItem value={'Canada'}>Canada</MenuItem>
+                    <MenuItem value={'Chile'}>Chile</MenuItem>
+                    <MenuItem value={'France'}>France</MenuItem>
+                    <MenuItem value={'Germany'}>Germany</MenuItem>
+                    <MenuItem value={'Greece'}>Greece</MenuItem>
+                    <MenuItem value={'Japan'}>Japan</MenuItem>
+                    <MenuItem value={'Mexico'}>Mexico</MenuItem>
+                    <MenuItem value={'South Korea'}>South Korea</MenuItem>
+                    <MenuItem value={'Spain'}>Spain</MenuItem>
+                    <MenuItem value={'Ukraine'}>Ukraine</MenuItem>
+                    <MenuItem value={'United States'}>United States</MenuItem>
+                </Select>
             </FormControl>
 
-            <FormControl style={{minWidth: 120}}>
-            <InputLabel id="demo-simple-select-label">Weather</InputLabel>
-            <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={playlistWeather}
-                label="Age"
-                onChange={handleChangePlaylistWeather}
-            >
-                <MenuItem value={'rainy'}>Rainy</MenuItem>
-                <MenuItem value={'snowy'}>Snowy</MenuItem>
-                <MenuItem value={'sunny'}>Sunny</MenuItem>
-                {/* <MenuItem value={'cloudy'}>Cloudy</MenuItem>
+            <FormControl style={{ minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Weather</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={playlistWeather}
+                    label="Age"
+                    onChange={handleChangePlaylistWeather}
+                >
+                    <MenuItem value={'rainy'}>Rainy</MenuItem>
+                    <MenuItem value={'snowy'}>Snowy</MenuItem>
+                    <MenuItem value={'sunny'}>Sunny</MenuItem>
+                    {/* <MenuItem value={'cloudy'}>Cloudy</MenuItem>
                 <MenuItem value={'windy'}>Windy</MenuItem> */}
-            </Select>
+                </Select>
             </FormControl>
 
-            <div style={{ margin: '0 auto', marginTop: '1%'}}>
+            <div style={{ margin: '0 auto', marginTop: '1%' }}>
                 <Button variant="outlined" onClick={handlePlaylist}>Get Playlist</Button>
             </div>
 
@@ -154,30 +154,30 @@ function Playlist() {
                 <Typography align="center" variant="h5"> Playlist for songs played in {playlistRegion} when the weather was {playlistWeather}</Typography>
                 <TableContainer sx={{ height: "40%" }}>
                     <Table stickyHeader aria-label="sticky table">
-                    <TableHead>
-                        <TableRow>
-                        {playlistColumns.map((column) => (
-                            <TableCell
-                            key={column.id}
-                            align={column.align}
-                            >
-                            {column.label}
-                            </TableCell>
-                        ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {playlistResults
-                        .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
-                        .map((row) => {
-                            return (
-                            <TableRow key={row.title}>
-                                <TableCell>{row.title}</TableCell>
-                                <TableCell>{row.artist}</TableCell>
+                        <TableHead>
+                            <TableRow>
+                                {playlistColumns.map((column) => (
+                                    <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                    >
+                                        {column.label}
+                                    </TableCell>
+                                ))}
                             </TableRow>
-                            );
-                        })}
-                    </TableBody>
+                        </TableHead>
+                        <TableBody>
+                            {playlistResults
+                                .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                .map((row) => {
+                                    return (
+                                        <TableRow key={row.title}>
+                                            <TableCell>{row.title}</TableCell>
+                                            <TableCell>{row.artist}</TableCell>
+                                        </TableRow>
+                                    );
+                                })}
+                        </TableBody>
                     </Table>
                 </TableContainer>
                 <TablePagination

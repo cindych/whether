@@ -20,7 +20,7 @@ function IndivSong() {
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
-    const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5); 
+    const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5);
     const infoColumns = [
         { id: 'artist', label: 'Artist' },
         { id: 'title', label: 'Title' },
@@ -41,7 +41,7 @@ function IndivSong() {
 
     const [songStatResults, setSongStatResults] = useState([]);
     const [statPage, setStatPage] = React.useState(0);
-    const [rowsPerStatPage, setRowsPerStatPage] = React.useState(5); 
+    const [rowsPerStatPage, setRowsPerStatPage] = React.useState(5);
     const statColumns = [
         { id: 'artist', label: 'Artist' },
         { id: 'title', label: 'Title' },
@@ -51,7 +51,7 @@ function IndivSong() {
     ];
 
     const handleSongInfo = () => {
-        getSongInfo(artist, title).then(res => { 
+        getSongInfo(artist, title).then(res => {
             setSongInfoResults(res.results)
             console.log(songInfoResults)
             console.log(songInfoResults.length)
@@ -59,7 +59,7 @@ function IndivSong() {
     };
 
     const handleSongAvgWeatherStats = () => {
-        getSongAvgWeatherStats(artist, title).then(res => { 
+        getSongAvgWeatherStats(artist, title).then(res => {
             setSongStatResults(res.results)
             console.log(songStatResults)
             console.log(songStatResults.length)
@@ -87,12 +87,12 @@ function IndivSong() {
     return (
         <div className="indiv-song-page">
             <div style={{ width: '75%', margin: '0 auto', marginTop: '3%', display: 'flex', alignContent: 'center', flexDirection: 'column' }}>
-                <div style={{ margin: '0 auto'}}>
+                <div style={{ margin: '0 auto' }}>
                     <TextField style={{ marginRight: '5px' }} color="primary" variant="outlined" value={artist} label={"Artist"} onChange={e => setArtist(e.target.value)} />
-                    <TextField variant="outlined" value={title} label={"Title"} onChange={e => setTitle(e.target.value)} /> 
+                    <TextField variant="outlined" value={title} label={"Title"} onChange={e => setTitle(e.target.value)} />
                 </div>
-                <div style={{ margin: '0 auto', marginTop: '1%'}}>
-                    <Button style={{ marginRight: '5px'}} variant="outlined" color="secondary" onClick={handleSongInfo}>Get Song Info</Button>
+                <div style={{ margin: '0 auto', marginTop: '1%' }}>
+                    <Button style={{ marginRight: '5px' }} variant="outlined" color="secondary" onClick={handleSongInfo}>Get Song Info</Button>
                     <Button variant="outlined" onClick={handleSongAvgWeatherStats}>Get Average Weather Stats</Button>
                 </div>
             </div>
@@ -102,43 +102,43 @@ function IndivSong() {
                     <Typography align="center" variant="h5">Track Information 🎶</Typography>
                     <TableContainer sx={{ height: "40%" }}>
                         <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {infoColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songInfoResults
-                            .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.id}>
-                                    <TableCell>{row.artist}</TableCell>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.id}</TableCell>
-                                    <TableCell>{row.acousticness}</TableCell>
-                                    <TableCell>{row.danceability}</TableCell>
-                                    <TableCell>{row.energy}</TableCell>
-                                    <TableCell>{row.instrumentalness}</TableCell>
-                                    <TableCell>{row.speechiness}</TableCell>
-                                    <TableCell>{row.liveness}</TableCell>
-                                    <TableCell>{row.loudness}</TableCell>
-                                    <TableCell>{row.mode}</TableCell>
-                                    <TableCell>{row.tempo}</TableCell>
-                                    <TableCell>{row.valence}</TableCell>
-                                    <TableCell>{row.key_track}</TableCell>
-                                    <TableCell>{row.duration}</TableCell>
+                            <TableHead>
+                                <TableRow>
+                                    {infoColumns.map((column) => (
+                                        <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                        >
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
-                                );
-                            })}
-                        </TableBody>
+                            </TableHead>
+                            <TableBody>
+                                {songInfoResults
+                                    .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                    .map((row) => {
+                                        return (
+                                            <TableRow key={row.id}>
+                                                <TableCell>{row.artist}</TableCell>
+                                                <TableCell>{row.title}</TableCell>
+                                                <TableCell>{row.id}</TableCell>
+                                                <TableCell>{row.acousticness}</TableCell>
+                                                <TableCell>{row.danceability}</TableCell>
+                                                <TableCell>{row.energy}</TableCell>
+                                                <TableCell>{row.instrumentalness}</TableCell>
+                                                <TableCell>{row.speechiness}</TableCell>
+                                                <TableCell>{row.liveness}</TableCell>
+                                                <TableCell>{row.loudness}</TableCell>
+                                                <TableCell>{row.mode}</TableCell>
+                                                <TableCell>{row.tempo}</TableCell>
+                                                <TableCell>{row.valence}</TableCell>
+                                                <TableCell>{row.key_track}</TableCell>
+                                                <TableCell>{row.duration}</TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
                         </Table>
                     </TableContainer>
                     <TablePagination
@@ -151,38 +151,38 @@ function IndivSong() {
                         onRowsPerPageChange={handleChangeRowsPerInfoPage}
                     />
                 </Paper>
-           
+
                 <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
                     <Typography align="center" variant="h5">Weather Statistics ☂️</Typography>
                     <TableContainer sx={{ height: "40%" }}>
                         <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {statColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songStatResults
-                            .slice(statPage * rowsPerStatPage, statPage * rowsPerStatPage + rowsPerStatPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.id}>
-                                    <TableCell>{row.artist}</TableCell>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.avgPrecipitation}</TableCell>
-                                    <TableCell>{row.avgTemp}</TableCell>
-                                    <TableCell>{row.avgSnowfall}</TableCell>
+                            <TableHead>
+                                <TableRow>
+                                    {statColumns.map((column) => (
+                                        <TableCell
+                                            key={column.id}
+                                            align={column.align}
+                                        >
+                                            {column.label}
+                                        </TableCell>
+                                    ))}
                                 </TableRow>
-                                );
-                            })}
-                        </TableBody>
+                            </TableHead>
+                            <TableBody>
+                                {songStatResults
+                                    .slice(statPage * rowsPerStatPage, statPage * rowsPerStatPage + rowsPerStatPage)
+                                    .map((row) => {
+                                        return (
+                                            <TableRow key={row.id}>
+                                                <TableCell>{row.artist}</TableCell>
+                                                <TableCell>{row.title}</TableCell>
+                                                <TableCell>{row.avgPrecipitation}</TableCell>
+                                                <TableCell>{row.avgTemp}</TableCell>
+                                                <TableCell>{row.avgSnowfall}</TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                            </TableBody>
                         </Table>
                     </TableContainer>
                     <TablePagination

@@ -10,6 +10,7 @@ import NavBar from './components/NavBar';
 import IndivSong from './pages/IndivSong';
 import ExploreSongs from './pages/ExploreSongs';
 import Playlist from './pages/Playlist';
+import Cities from './pages/Cities';
 
 import HomePage from './pages/HomePage';
 import PlaylistPage from './pages/PlaylistPage';
@@ -35,6 +36,11 @@ ReactDOM.render(
 					path="/explore"
 					render={() => (
 						<ExploreSongs />
+					)} />
+				<Route exact
+					path="/city"
+					render={() => (
+						<Cities />
 					)} />
 				<Route exact
 					path="/homepage"

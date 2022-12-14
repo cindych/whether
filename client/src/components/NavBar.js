@@ -23,10 +23,11 @@ function NavBar() {
                 </IconButton>
                 <Typography variant="overline" color="black">app name</Typography>
             </div>
-            <div className="right-side" style={{ display: 'flex', justifyContent: 'space-between', width: '25%', marginRight: '2%' }}>
+            <div className="right-side" style={{ display: 'flex', justifyContent: 'space-between', width: '30%', minWidth: '250px', marginRight: '2%' }}>
                 <Typography variant="caption" color="black"><Link variant="inherit" color="inherit" href="/" underline="none">playlist</Link></Typography>
                 <Typography variant="caption" color="black"><Link variant="inherit" color="inherit" href="/song" underline="none">song info</Link></Typography>
                 <Typography variant="caption" color="black"><Link variant="inherit" color="inherit" href="/explore" underline="none">explore</Link></Typography>
+                <Typography variant="caption" color="black"><Link variant="inherit" color="inherit" href="/city" underline="none">cities</Link></Typography>
             </div>
         </Toolbar>
     </AppBar>

@@ -75,7 +75,7 @@ const getCities = async (attribute, weather, threshold) => {
     var res = await fetch(`http://${config.server_host}:${config.server_port}/cities/${attribute}/${weather}/${threshold}`, {
         method: 'GET',
     })
-    return res.json()
+    return res.json();
 }
 
 // TODO: remove these as well as any relevant imports in any of the other files

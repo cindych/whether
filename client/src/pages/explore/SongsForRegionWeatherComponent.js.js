@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -6,7 +6,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Slider from '@mui/material/Slider';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -15,20 +14,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import Typography from '@mui/material/Typography';
 
-
-import {
-    getAllSongs, getSongsAttrThresholdWeather
-} from '../../fetcher';
-import { attribute, attributeColumns, weather } from './options';
+import { basicColumns, region, weather } from './options';
+import { getSongsForWeatherMultLocations, getSongsForWeather } from '../../fetcher';
 
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
-const attributeOptions = attribute.map((item) => <MenuItem value={item}>{item}</MenuItem>);
+const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
-export default function SongsForAttributeWeatherComponent() {
+export default function SongsForRegionWeatherComponent() {
     const [weather, setWeather] = React.useState('');
-    const [attribute, setAttribute] = React.useState('');
-    const [range, setRange] = React.useState([0, 1]);
+    const [region, setRegion] = React.useState('all');
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
@@ -38,12 +34,8 @@ export default function SongsForAttributeWeatherComponent() {
         setWeather(event.target.value);
     };
 
-    const attributeOnChange = (event) => {
-        setAttribute(event.target.value);
-    };
-
-    const handleSliderChange = (event, newValue) => {
-        setRange(newValue);
+    const regionOnChange = (event) => {
+        setRegion(event.target.value);
     };
 
     const handleChangeInfoPage = (e, newPage) => {
@@ -57,24 +49,24 @@ export default function SongsForAttributeWeatherComponent() {
 
     // useEffect runs on load + whenever weather, attribute, range are updated
     useEffect(() => {
-        console.log(weather, attribute, range);
+        console.log(weather, region);
         // TODO: add loading options
 
-        if (weather === '' && attribute === '') {
-            getAllSongs().then(res => {
+        if (weather !== '' && region === 'all') {
+            getSongsForWeatherMultLocations(weather).then(res => {
                 setSongInfoResults(res.results);
             });
-        } else if (weather !== '' && attribute !== '') {
+        } else if (weather !== '' && region !== 'all') {
             console.log('help');
-            getSongsAttrThresholdWeather(attribute, weather, range[0], range[1]).then(res => {
+            getSongsForWeather(weather, region).then(res => {
                 setSongInfoResults(res.results);
             });
         }
-    }, [weather, attribute, range]);
+    }, [weather, region]);
 
     return (
         <Container maxWidth="sm">
-            SongsForAttributeWeatherComponent
+            SongsForRegionWeatherComponent
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -92,37 +84,25 @@ export default function SongsForAttributeWeatherComponent() {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="attribute-select-label">Attribute</InputLabel>
+                    <InputLabel id="region-select-label">Region</InputLabel>
                     <Select
-                        labelId="attribute-select-label"
-                        id="attribute-select"
-                        value={attribute}
-                        label="Attribute"
-                        onChange={attributeOnChange}
+                        labelId="region-select-label"
+                        id="region-select"
+                        value={region}
+                        label="Region"
+                        onChange={regionOnChange}
                     >
-                        {attributeOptions}
+                        {regionOptions}
                     </Select>
                 </FormControl>
-                {/* TODO adjust slider functionality */}
-                <Box sx={{ minWidth: 200 }}>
-                    <Slider
-                        getAriaLabel={() => 'Attribute Range'}
-                        value={range}
-                        onChange={handleSliderChange}
-                        step={.1}
-                        valueLabelDisplay="auto"
-                        min={0}
-                        max={1}
-                    />
-                </Box>
             </Box>
-            <Paper>
-                {/* <Typography align="center" variant="h5"> 🎶 All Songs 🎶</Typography> */}
+            <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
+                {/* <Typography align="center" variant="h5"> Songs played in {songsForWeatherLocation ? songsForWeatherLocation : "all regions"} when the weather was {songsForWeatherWeather}</Typography> */}
                 <TableContainer sx={{ height: "40%" }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
-                                {attributeColumns.map((column) => (
+                                {basicColumns.map((column) => (
                                     <TableCell
                                         key={column.id}
                                         align={column.align}
@@ -137,22 +117,10 @@ export default function SongsForAttributeWeatherComponent() {
                                 .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
                                 .map((row) => {
                                     return (
-                                        <TableRow key={row.id}>
-                                            <TableCell>{row.artist}</TableCell>
+                                        <TableRow key={row.title}>
                                             <TableCell>{row.title}</TableCell>
-                                            <TableCell>{row.id}</TableCell>
-                                            <TableCell>{row.acousticness}</TableCell>
-                                            <TableCell>{row.danceability}</TableCell>
-                                            <TableCell>{row.energy}</TableCell>
-                                            <TableCell>{row.instrumentalness}</TableCell>
-                                            <TableCell>{row.speechiness}</TableCell>
-                                            <TableCell>{row.liveness}</TableCell>
-                                            <TableCell>{row.loudness}</TableCell>
-                                            <TableCell>{row.mode}</TableCell>
-                                            <TableCell>{row.tempo}</TableCell>
-                                            <TableCell>{row.valence}</TableCell>
-                                            <TableCell>{row.key_track}</TableCell>
-                                            <TableCell>{row.duration}</TableCell>
+                                            <TableCell>{row.artist}</TableCell>
+                                            {/* <TableCell>{row.region}</TableCell> */}
                                         </TableRow>
                                     );
                                 })}

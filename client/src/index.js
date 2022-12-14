@@ -6,14 +6,14 @@ import {
 	Switch
 } from 'react-router-dom';
 
-import HomePage from './pages/HomePage';
-
-import PlaylistPage from './pages/PlaylistPage';
-import IndivSongPage from './pages/IndivSongPage';
-import ExploreSongsPage from './pages/ExploreSongsPage';
 import IndivSong from './pages/IndivSong';
 import ExploreSongs from './pages/ExploreSongs';
 import Playlist from './pages/Playlist';
+
+import HomePage from './pages/HomePage';
+import PlaylistPage from './pages/PlaylistPage';
+import IndivSongPage from './pages/IndivSongPage';
+import ExploreSongsPage from './pages/ExploreSongsPage';
 
 ReactDOM.render(
 	<div>
@@ -25,7 +25,7 @@ ReactDOM.render(
 						<Playlist />
 					)} />
 				<Route exact
-					path="/indivsong"
+					path="/song"
 					render={() => (
 						<IndivSong />
 					)} />

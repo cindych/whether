@@ -78,13 +78,13 @@ async function songsForWeather(req, res) {
     FROM Chart ch JOIN Weather w ON ch.date = w.Date`
     if (req.params.weather === 'rainy') {
         query += `\
-        WHERE PRECIPITATION > 0.1`
+        WHERE PRECIPITATION > 1`
     } else if (req.params.weather === 'sunny') {
         query += `\
-        WHERE w.precipitation < 0.1 AND w.temperature > 50`
+        WHERE w.precipitation <= 1 AND w.temperature > 50`
     } else if (req.params.weather === 'snowy') {
         query += `\
-        WHERE w.snowfall > 0.1`
+        WHERE w.snowfall > 1`
     } else if (req.params.weather === 'cloudy') {
         query += `\
         WHERE w.cloudiness > 400`
@@ -118,11 +118,11 @@ async function songsForWeatherMultLocations(req, res) {
         SELECT date, Location \
         FROM Weather \ `
     if (req.params.weather === 'rainy') {
-        query += `WHERE precipitation > 0.1`
+        query += `WHERE precipitation > 1`
     } else if (req.params.weather === 'sunny') {
-        query += `WHERE precipitation < 0.1 AND temperature > 50`
+        query += `WHERE precipitation <= 1 AND temperature > 50`
     } else if (req.params.weather === 'snowy') {
-        query += `WHERE snowfall > 0.1`
+        query += `WHERE snowfall > 1`
     } else if (req.params.weather === 'cloudy') {
         query += `WHERE cloudiness > 400`
     } else if (req.params.weather === 'windy') {
@@ -235,11 +235,11 @@ async function songsAttrThresholdWeather(req, res) {
     `
 
     if (req.params.weather === 'rainy') {
-        query += `AND w.precipitation > 0.1`
+        query += `AND w.precipitation > 1`
     } else if (req.params.weather === 'sunny') {
-        query += `AND w.precipitation < 0.1 AND w.temperature > 50`
+        query += `AND w.precipitation <= 1 AND w.temperature > 50`
     } else if (req.params.weather === 'snowy') {
-        query += `AND w.snowfall > 0.1`
+        query += `AND w.snowfall > 1`
     } else if (req.params.weather === 'cloudy') {
         query += `AND w.cloudiness > 400`
     } else if (req.params.weather === 'windy') {
@@ -275,15 +275,15 @@ async function basicPlaylist(req, res) {
     
         if (req.query.weather === 'rainy') {
             query += `\
-            WHERE w.precipitation > 0.1
+            WHERE w.precipitation > 1
             `
         } else if (req.query.weather === 'snowy') {
             query += `\
-            WHERE w.snowfall > 0.1
+            WHERE w.snowfall > 1
             `
         } else if (req.query.weather === 'sunny') {
             query += `\
-            WHERE w.precipitation < 0.1 AND w.temperature > 50
+            WHERE w.precipitation <= 1 AND w.temperature > 50
             `
         }
 
@@ -320,55 +320,33 @@ async function songStatsForWeather(req, res) {
     
     // note: boolean condition needs to be added! 
     // (corresponds to NOT IN instead of IN)
-        if (req.query.weather = 'rainy') {
-        connection.query(`
-        WITH regionWeatherSongs(id) AS (
-            SELECT ch.id
-            FROM Chart ch JOIN Cities c on c.region = ch.region
-                JOIN Weather w ON w.location = c.city AND w.date = ch.date
-            WHERE w.precipitation > 0.1 AND c.region = '${req.query.location}'
-        )
-        SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
-        FROM Songs s
-        WHERE s.id IN (SELECT * FROM regionWeatherSongs)
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
+
+    var query = `
+    WITH regionWeatherSongs(id) AS (
+        SELECT ch.id
+        FROM Chart ch JOIN Cities c ON c.region = ch.region
+            JOIN Weather w ON w.location = c.city AND w.date = ch.date
+    `
+    if (req.query.weather = 'rainy') {
+        query += `\
+        WHERE w.precipitation > 1`
     } else if (req.query.weather = 'snowy') {
-        connection.query(`
-        WITH regionWeatherSongs(id) AS (
-            SELECT ch.id
-            FROM Chart ch JOIN Cities c on c.region = ch.region
-                JOIN Weather w ON w.location = c.city AND w.date = ch.date
-            WHERE w.snowfall > 0.1 AND c.region = '${req.query.location}'
-        )
-        SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
-        FROM Songs s
-        WHERE s.id IN (SELECT * FROM regionWeatherSongs)
-        `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
+        query += `\
+        WHERE WHERE w.snowfall > 1`
     } else if (req.query.weather = 'sunny') {
-        connection.query(`
-        WITH regionWeatherSongs(id) AS (
-            SELECT ch.id
-            FROM Chart ch JOIN Cities c on c.region = ch.region
-                JOIN Weather w ON w.location = c.city AND w.date = ch.date
-            WHERE w.precipitation < 0.1 AND w.temperature > 50 AND c.region = '${req.query.location}'
-        )
-        SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
-        FROM Songs s
-        WHERE s.id IN (SELECT * FROM regionWeatherSongs)
+        query += `\
+        WHERE w.precipitation <= 1 AND w.temperature > 50`
+    }
+
+    query += ` AND c.region = '${req.query.location}'
+    )
+    SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
+    FROM Songs s
+    WHERE s.id IN (SELECT * FROM regionWeatherSongs)
+    `
+
+    connection.query(`
+        ${query}
         `, function (error, results, fields) {
             if (error) {
                 console.log(error)
@@ -376,9 +354,7 @@ async function songStatsForWeather(req, res) {
             } else if (results) {
                 res.json({ results: results })
             }
-        });
-    }
-  
+    });
 }
 
 // songAvgWeatherStats: get avg weather stats for query song
@@ -418,11 +394,11 @@ async function cities(req, res) {
         WHERE 
     `
     if (req.params.weather === 'rainy') {
-        query += ` w.precipitation > 0.1`
+        query += ` w.precipitation > 1`
     } else if (req.params.weather === 'sunny') {
-        query += ` w.precipitation < 0.1 AND w.temperature > 50`
+        query += ` w.precipitation <= 1 AND w.temperature > 50`
     } else if (req.params.weather === 'snowy') {
-        query += ` w.snowfall > 0.1`
+        query += ` w.snowfall > 1`
     } else if (req.params.weather === 'cloudy') {
         query += ` w.cloudiness > 400`
     } else if (req.params.weather === 'windy') {

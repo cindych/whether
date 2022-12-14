@@ -125,43 +125,43 @@ function IndivSong() {
                         <Typography align="center" variant="h5">Track Information</Typography>
                         <TableContainer sx={{ height: "40%" }}>
                             <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                {infoColumns.map((column) => (
-                                    <TableCell
-                                    key={column.id}
-                                    align={column.align}
-                                    >
-                                    {column.label}
-                                    </TableCell>
-                                ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {songInfoResults
-                                .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
-                                .map((row) => {
-                                    return (
-                                    <TableRow key={row.id}>
-                                        <TableCell>{row.artist}</TableCell>
-                                        <TableCell>{row.title}</TableCell>
-                                        <TableCell>{row.acousticness}</TableCell>
-                                        <TableCell>{row.danceability}</TableCell>
-                                        <TableCell>{row.energy}</TableCell>
-                                        <TableCell>{row.instrumentalness}</TableCell>
-                                        <TableCell>{row.speechiness}</TableCell>
-                                        <TableCell>{row.liveness}</TableCell>
-                                        <TableCell>{row.loudness}</TableCell>
-                                        <TableCell>{row.mode}</TableCell>
-                                        <TableCell>{row.tempo}</TableCell>
-                                        <TableCell>{row.valence}</TableCell>
-                                        <TableCell>{row.key_track}</TableCell>
-                                        <TableCell>{row.duration}</TableCell>
-                                        <TableCell>{row.id}</TableCell>
+                                <TableHead>
+                                    <TableRow>
+                                    {infoColumns.map((column) => (
+                                        <TableCell
+                                        key={column.id}
+                                        align={column.align}
+                                        >
+                                        {column.label}
+                                        </TableCell>
+                                    ))}
                                     </TableRow>
-                                    );
-                                })}
-                            </TableBody>
+                                </TableHead>
+                                <TableBody>
+                                    {songInfoResults
+                                    .slice(infoPage * rowsPerInfoPage, infoPage * rowsPerInfoPage + rowsPerInfoPage)
+                                    .map((row) => {
+                                        return (
+                                        <TableRow key={row.id}>
+                                            <TableCell>{row.artist}</TableCell>
+                                            <TableCell>{row.title}</TableCell>
+                                            <TableCell>{row.acousticness}</TableCell>
+                                            <TableCell>{row.danceability}</TableCell>
+                                            <TableCell>{row.energy}</TableCell>
+                                            <TableCell>{row.instrumentalness}</TableCell>
+                                            <TableCell>{row.speechiness}</TableCell>
+                                            <TableCell>{row.liveness}</TableCell>
+                                            <TableCell>{row.loudness}</TableCell>
+                                            <TableCell>{row.mode}</TableCell>
+                                            <TableCell>{row.tempo}</TableCell>
+                                            <TableCell>{row.valence}</TableCell>
+                                            <TableCell>{row.key_track}</TableCell>
+                                            <TableCell>{row.duration}</TableCell>
+                                            <TableCell>{row.id}</TableCell>
+                                        </TableRow>
+                                        );
+                                    })}
+                                </TableBody>
                             </Table>
                         </TableContainer>
                         <TablePagination
@@ -355,33 +355,33 @@ function IndivSong() {
                     <Typography align="center" variant="h5">Weather Statistics</Typography>
                     <TableContainer sx={{ height: "40%" }}>
                         <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                            {statColumns.map((column) => (
-                                <TableCell
-                                key={column.id}
-                                align={column.align}
-                                >
-                                {column.label}
-                                </TableCell>
-                            ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {songStatResults
-                            .slice(statPage * rowsPerStatPage, statPage * rowsPerStatPage + rowsPerStatPage)
-                            .map((row) => {
-                                return (
-                                <TableRow key={row.id}>
-                                    <TableCell>{row.artist}</TableCell>
-                                    <TableCell>{row.title}</TableCell>
-                                    <TableCell>{row.avgTemp}</TableCell>
-                                    <TableCell>{row.avgPrecipitation}</TableCell>
-                                    <TableCell>{row.avgSnowfall}</TableCell>
+                            <TableHead>
+                                <TableRow>
+                                {statColumns.map((column) => (
+                                    <TableCell
+                                    key={column.id}
+                                    align={column.align}
+                                    >
+                                    {column.label}
+                                    </TableCell>
+                                ))}
                                 </TableRow>
-                                );
-                            })}
-                        </TableBody>
+                            </TableHead>
+                            <TableBody>
+                                {songStatResults
+                                .slice(statPage * rowsPerStatPage, statPage * rowsPerStatPage + rowsPerStatPage)
+                                .map((row) => {
+                                    return (
+                                    <TableRow key={row.id}>
+                                        <TableCell>{row.artist}</TableCell>
+                                        <TableCell>{row.title}</TableCell>
+                                        <TableCell>{row.avgTemp}</TableCell>
+                                        <TableCell>{row.avgPrecipitation}</TableCell>
+                                        <TableCell>{row.avgSnowfall}</TableCell>
+                                    </TableRow>
+                                    );
+                                })}
+                            </TableBody>
                         </Table>
                     </TableContainer>
                     <TablePagination

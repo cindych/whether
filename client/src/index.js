@@ -6,6 +6,7 @@ import {
 	Switch
 } from 'react-router-dom';
 
+import NavBar from './components/NavBar';
 import IndivSong from './pages/IndivSong';
 import ExploreSongs from './pages/ExploreSongs';
 import Playlist from './pages/Playlist';
@@ -18,6 +19,7 @@ import ExploreSongsPage from './pages/ExploreSongsPage';
 ReactDOM.render(
 	<div>
 		<Router>
+			<NavBar />
 			<Switch>
 				<Route exact
 					path="/"

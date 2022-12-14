@@ -1,0 +1,7 @@
+.navigiation-bar div .right-side span:hover {
+    color: #d9dad7;
+    -moz-transition: color .2s ease-in;
+    -o-transition: color .2s ease-in;
+    -webkit-transition: color .2s ease-in;
+    transition: color .2s ease-in;
+}

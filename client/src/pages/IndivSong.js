@@ -78,7 +78,7 @@ function IndivSong() {
     }
 
     return (
-        <div className="indiv-song-page">
+        <div className="indiv-song-page" style={{ minWidth: '800px' }}>
             <div style={{ width: '75%', margin: '0 auto', marginTop: '3%', display: 'flex' }}>
                 <div style={{ margin: '0 auto' }}>
                     <TextField fullWidth margin="dense" sx={{ marginRight: '5px' }} variant="outlined" value={artist} label={"Artist"} onChange={e => setArtist(e.target.value)} />
@@ -128,8 +128,8 @@ function IndivSong() {
 
             <div className="data-results">
                 { showSongInfo && songInfoResults.length > 0 &&
-                    <div className="song-info-container" style={{ display: 'flex' }}>
-                        <Paper elevation={4} sx={{ maxWidth: '65%', maxHeight: '550px', margin: '0 auto', padding: 3, marginTop: '2%' }}>
+                    <div className="song-info-container" style={{ display: 'flex', alignItems: 'flex-start' }}>
+                        <Paper elevation={4} sx={{ maxWidth: '65%', margin: '0 auto', padding: 3, marginTop: '2%' }}>
                             <Typography align="center" variant="h5">Track Information</Typography>
                             <TableContainer>
                                 <Table stickyHeader aria-label="sticky table">

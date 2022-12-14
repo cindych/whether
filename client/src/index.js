@@ -15,6 +15,8 @@ import PlaylistPage from './pages/PlaylistPage';
 import IndivSongPage from './pages/IndivSongPage';
 import ExploreSongsPage from './pages/ExploreSongsPage';
 
+import ExplorePage from './pages/explore/ExplorePage'
+
 ReactDOM.render(
 	<div>
 		<Router>
@@ -38,6 +40,12 @@ ReactDOM.render(
 					path="/homepage"
 					render={() => (
 						<HomePage />
+					)} />
+
+				<Route exact
+					path="/e"
+					render={() => (
+						<ExplorePage />
 					)} />
 
 // below are old pages with react components TODO: delete when done

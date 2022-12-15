@@ -89,7 +89,7 @@ function IndivSong() {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', margin: '5%' }}>
                     <Button sx={{
-                            marginRight: '5px',
+                            marginRight: '10px',
                             background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 35%, rgba(124,124,124,1) 100%)',
                             border: 0,
                             borderRadius: 2,
@@ -97,6 +97,7 @@ function IndivSong() {
                             color: 'white',
                             height: 48,
                             padding: '0 25px',
+                            lineHeight: '17px'
                         }}
                         onClick={() => {
                             getSongInfo(artist, title).then(res => setSongInfoResults(res.results));
@@ -115,6 +116,7 @@ function IndivSong() {
                             color: 'white',
                             height: 48,
                             padding: '0 25px',
+                            lineHeight: '17px'
                         }}
                         onClick={() => {
                                 getSongAvgWeatherStats(artist, title).then(res => setSongStatResults(res.results));

@@ -25,9 +25,9 @@ function Cities() {
     const [data, setData] = useState([]);
 
     return (
-        <Container maxWidth="sm" className="cities=page">
+        <div className="cities=page">
             <Typography align="center" variant="h2">cities</Typography>
-            <Box sx={{ padding: '2%', display: 'flex', flexDirection: 'column', marginTop: '2%', marginBottom: '2%' }}>
+            <Box sx={{ width: '50%', padding: '2%', display: 'flex', flexDirection: 'column', marginTop: '2%', marginBottom: '2%', margin: '0 auto' }}>
                 <Typography style={{ marginBottom: '3%', textAlign: 'center' }} variant="caption">find cities where avg attribute of songs played on weather days is above x amount</Typography>
                 <FormControl>
                     <FormLabel>weather</FormLabel>
@@ -69,7 +69,7 @@ function Cities() {
             <div style={{ margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                 { data.map(entry => <City key={entry.location} name={entry.location} />)}
             </div>
-        </Container>
+        </div>
     )   
 }
 

@@ -246,6 +246,8 @@ async function songsAttrThresholdWeather(req, res) {
         query += `AND w.Wind_Speed > 20`
     } 
 
+    query += ` ORDER BY ${req.params.attribute}`
+
     connection.query(`
     ${query}
     `, function (error, results, fields) {

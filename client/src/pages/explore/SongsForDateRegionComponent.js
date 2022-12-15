@@ -22,7 +22,7 @@ import TableRow from '@mui/material/TableRow';
 import { getSongsLocationDate } from '../../fetcher';
 import { basicColumns, region } from './options';
 
-const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuItem>);
+const regionOptions = region.slice(1).map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
 export default function SongsForDateRegionComponent(props) {
     const [region, setRegion] = useState('');

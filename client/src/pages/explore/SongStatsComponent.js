@@ -18,7 +18,7 @@ import { attribute, statsColumns, region, weather } from './options';
 
 const attributeOptions = attribute.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
-const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuItem>);
+const regionOptions = region.slice(1).map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
 export default function SongStatsComponent(props) {
     const [attribute, setAttribute] = useState('');

@@ -65,7 +65,7 @@ export default function SongsForRegionWeatherComponent() {
     }, [region, weather]);
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" height="50%">
             SongsForRegionWeatherComponent
             <Box sx={{
                 display: 'flex',

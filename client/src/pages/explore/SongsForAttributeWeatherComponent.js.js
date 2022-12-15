@@ -73,7 +73,7 @@ export default function SongsForAttributeWeatherComponent() {
     }, [attribute, range, weather]);
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" height="50%">
             SongsForAttributeWeatherComponent
             <Box sx={{
                 display: 'flex',

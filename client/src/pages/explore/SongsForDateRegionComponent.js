@@ -65,7 +65,7 @@ export default function SongsForDateRegionComponent() {
     }, [date, region]);
 
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" height="50%">
             SongsForDateRegionComponent
             <Box sx={{
                 display: 'flex',

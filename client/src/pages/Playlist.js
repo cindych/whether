@@ -40,7 +40,6 @@ function Playlist() {
             setIsLoading(true);
             getBasicPlaylist(region, weather).then(res => {
                 setPlaylistResults(res.results);
-                console.log(playlistResults);
                 setIsLoading(false);
             });
         }

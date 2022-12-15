@@ -39,7 +39,6 @@ export default function SongsForDateRegionComponent(props) {
     };
 
     const dateOnChange = (value) => {
-        console.log(moment(value).format('YYYYMMDD'));
         setDate(value);
     }
 

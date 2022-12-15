@@ -47,7 +47,6 @@ export default function SongStatsComponent(props) {
         if (attribute !== '' && region !== '' && weather !== '') {
             setIsLoading(true);
             getSongStatsForWeather(attribute, region, weather).then(res => {
-                console.log(res.results[0].min);
                 setSongInfoResults(res.results);
                 setIsLoading(false);
             });

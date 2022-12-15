@@ -21,7 +21,7 @@ function NavBar() {
                 >
                     <AudiotrackIcon fontSize="large" />
                 </IconButton>
-                <Typography variant="overline" color="black">app name</Typography>
+                <Typography variant="overline" color="black">whether</Typography>
             </div>
             <div className="right-side" style={{ display: 'flex', justifyContent: 'space-between', width: '30%', minWidth: '250px', marginRight: '2%' }}>
                 <Typography variant="caption" color="black"><Link variant="inherit" color="inherit" href="/" underline="none">playlist</Link></Typography>

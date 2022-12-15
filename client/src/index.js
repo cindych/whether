@@ -12,9 +12,6 @@ import Playlist from './pages/Playlist';
 import Cities from './pages/Cities';
 
 import HomePage from './pages/HomePage';
-import PlaylistPage from './pages/PlaylistPage';
-import IndivSongPage from './pages/IndivSongPage';
-
 import ExplorePage from './pages/explore/ExplorePage'
 
 ReactDOM.render(
@@ -46,18 +43,6 @@ ReactDOM.render(
 					path="/homepage"
 					render={() => (
 						<HomePage />
-					)} />
-
-// below are old pages with react components TODO: delete when done
-				<Route exact
-					path="/playlistPage"
-					render={() => (
-						<PlaylistPage />
-					)} />
-				<Route exact
-					path="/indivSongPage"
-					render={() => (
-						<IndivSongPage />
 					)} />
 			</Switch>
 		</Router>

@@ -22,8 +22,8 @@ const weatherOptions = weather.slice(0, 3).map((item) => <MenuItem value={item}>
 
 function Playlist() {
     const [playlistResults, setPlaylistResults] = useState([]);
-    const [region, setRegion] = useState('')
-    const [weather, setWeather] = useState('')
+    const [region, setRegion] = useState('united states')
+    const [weather, setWeather] = useState('sunny')
 
     const [isLoading, setIsLoading] = useState(false);
 

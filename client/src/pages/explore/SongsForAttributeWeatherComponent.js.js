@@ -25,10 +25,12 @@ import { attribute, attributeColumns, weather } from './options';
 const attributeOptions = attribute.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
-export default function SongsForAttributeWeatherComponent() {
+export default function SongsForAttributeWeatherComponent(props) {
     const [attribute, setAttribute] = React.useState('');
     const [weather, setWeather] = React.useState('');
     const [range, setRange] = React.useState([0, 1]);
+
+    const { setIsLoading } = props;
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
@@ -57,17 +59,17 @@ export default function SongsForAttributeWeatherComponent() {
 
     // useEffect runs on load + whenever weather, attribute, range are updated
     useEffect(() => {
-        console.log(weather, attribute, range);
-        // TODO: add loading options
-
         if (attribute === '' && weather === '') {
+            setIsLoading(true);
             getAllSongs().then(res => {
                 setSongInfoResults(res.results);
+                setIsLoading(false);
             });
         } else if (attribute !== '' && weather !== '') {
-            console.log('help');
+            setIsLoading(true);
             getSongsAttrThresholdWeather(attribute, weather, range[0], range[1]).then(res => {
                 setSongInfoResults(res.results);
+                setIsLoading(false);
             });
         }
     }, [attribute, range, weather]);

@@ -22,9 +22,11 @@ import { getSongsForWeatherMultLocations, getSongsForWeather } from '../../fetch
 const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
-export default function SongsForRegionWeatherComponent() {
+export default function SongsForRegionWeatherComponent(props) {
     const [region, setRegion] = React.useState('all');
     const [weather, setWeather] = React.useState('');
+
+    const { setIsLoading } = props;
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
@@ -53,16 +55,19 @@ export default function SongsForRegionWeatherComponent() {
         // TODO: add loading options
 
         if (weather !== '' && region === 'all') {
+            setIsLoading(true);
             getSongsForWeatherMultLocations(weather).then(res => {
                 setSongInfoResults(res.results);
+                setIsLoading(false);
             });
         } else if (weather !== '' && region !== 'all') {
-            console.log('help');
+            setIsLoading(true);
             getSongsForWeather(weather, region).then(res => {
                 setSongInfoResults(res.results);
+                setIsLoading(false);
             });
         }
-    }, [region, weather]);
+    }, [region, weather, setIsLoading]);
 
     return (
         <Container maxWidth="sm">

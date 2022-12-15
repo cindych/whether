@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -11,10 +11,14 @@ import SongStatsComponent from './SongStatsComponent.js';
 import { maxHeight } from '@mui/system';
 
 export default function ExplorePage() {
+
+    const [isLoading, setIsLoading] = useState(false);
+
     // TODO: add toggle to flip between location date/weather region
     return (
         <Container>
             <Typography align="center" variant="h2">explore</Typography>
+            {isLoading ? 'loading' : 'hi'}
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -27,8 +31,8 @@ export default function ExplorePage() {
                     justifyContent: 'space-between',
                     width: '50%',
                 }}>
-                    <SongsForRegionWeatherComponent />
-                    <SongsForDateRegionComponent />
+                    <SongsForRegionWeatherComponent setIsLoading={setIsLoading}/>
+                    <SongsForDateRegionComponent setIsLoading={setIsLoading}/>
                 </Box>
                 <Box sx={{
                     display: 'flex',
@@ -36,8 +40,8 @@ export default function ExplorePage() {
                     justifyContent: 'space-between',
                     width: '50%',
                 }}>
-                    <SongsForAttributeWeatherComponent />
-                    <SongStatsComponent />
+                    <SongsForAttributeWeatherComponent setIsLoading={setIsLoading}/>
+                    <SongStatsComponent isLoading={isLoading} setIsLoading={setIsLoading}/>
                 </Box>
             </Box>
         </Container>

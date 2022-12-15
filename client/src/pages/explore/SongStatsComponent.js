@@ -21,10 +21,12 @@ const attributeOptions = attribute.map((item) => <MenuItem value={item}>{item}</
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
-export default function SongStatsComponent() {
-    const [attribute, setAttribute] = React.useState('');
-    const [region, setRegion] = React.useState('united states');
-    const [weather, setWeather] = React.useState('');
+export default function SongStatsComponent(props) {
+    const [attribute, setAttribute] = useState('');
+    const [region, setRegion] = useState('united states');
+    const [weather, setWeather] = useState('');
+
+    const { isLoading, setIsLoading } = props;
 
     const [songInfoResults, setSongInfoResults] = useState([]);
 
@@ -43,21 +45,20 @@ export default function SongStatsComponent() {
 
     // useEffect runs on load + whenever attribute, region, weather are updated
     useEffect(() => {
-
-        // TODO: add loading options
-        // TODO: add warning that stats aren't available for regions
-
         if (attribute !== '' && region !== '' && weather !== '') {
+            setIsLoading(true);
             getSongStatsForWeather(attribute, region, weather).then(res => {
-                console.log(res.results);
+                console.log(res.results[0].min);
                 setSongInfoResults(res.results);
+                setIsLoading(false);
             });
         }
 
-    }, [attribute, region, weather]);
+    }, [attribute, region, weather, setIsLoading]);
 
     return (
         <Container maxWidth="sm">
+            {!isLoading && songInfoResults.length === 1 && songInfoResults[0].min === null ? 'no results ):' : ''}
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between'

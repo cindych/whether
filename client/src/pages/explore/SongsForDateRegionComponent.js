@@ -26,9 +26,11 @@ import { basicColumns, region } from './options';
 
 const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
-export default function SongsForDateRegionComponent() {
+export default function SongsForDateRegionComponent(props) {
     const [region, setRegion] = useState('');
-    const [date, setDate] = useState(null); // TODO: better default value lol
+    const [date, setDate] = useState(null); 
+
+    const { setIsLoading } = props;
 
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [infoPage, setInfoPage] = React.useState(0);
@@ -53,16 +55,14 @@ export default function SongsForDateRegionComponent() {
     }
 
     useEffect(() => {
-        console.log(region);
-        // TODO: add loading options
-
-        if (date !== '' && region !== '') {
+        if (date !== null && region !== '') {
+            setIsLoading(true);
             getSongsLocationDate(region, date).then(res => {
-                console.log(res.results);
+                setIsLoading(false);
                 setSongInfoResults(res.results);
             });
         }
-    }, [date, region]);
+    }, [date, region, setIsLoading]);
 
     return (
         <Container maxWidth="sm">

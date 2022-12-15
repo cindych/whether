@@ -53,6 +53,7 @@ function Playlist() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
+                marginTop: '40px'
             }}>
                 <FormControl style={{ minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-label">region</InputLabel>

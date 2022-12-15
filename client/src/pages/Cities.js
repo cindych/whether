@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -23,8 +25,9 @@ function Cities() {
     const [data, setData] = useState([]);
 
     return (
-        <div className="cities=page">
-            <Paper elevation={4} sx={{ padding: '2%', display: 'flex', flexDirection: 'column', width: '50%', marginLeft: '3%', marginTop: '2%', marginBottom: '2%' }}>
+        <Container maxWidth="sm" className="cities=page">
+            <Typography align="center" variant="h2">cities</Typography>
+            <Box sx={{ padding: '2%', display: 'flex', flexDirection: 'column', marginTop: '2%', marginBottom: '2%' }}>
                 <Typography style={{ marginBottom: '3%', textAlign: 'center' }} variant="caption">find cities where avg attribute of songs played on weather days is above x amount</Typography>
                 <FormControl>
                     <FormLabel>weather</FormLabel>
@@ -62,11 +65,11 @@ function Cities() {
                     >
                     Get cities
                 </Button>
-            </Paper>
+            </Box>
             <div style={{ margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                 { data.map(entry => <City key={entry.location} name={entry.location} />)}
             </div>
-        </div>
+        </Container>
     )   
 }
 

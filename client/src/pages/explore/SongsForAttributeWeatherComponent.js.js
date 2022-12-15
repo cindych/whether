@@ -6,8 +6,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Slider from '@mui/material/Slider';
-import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,7 +13,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
+import { styled } from "@mui/material/styles";
 
 import {
     getAllSongs, getSongsAttrThresholdWeather
@@ -26,15 +25,15 @@ const attributeOptions = attribute.map((item) => <MenuItem value={item}>{item}</
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
 export default function SongsForAttributeWeatherComponent(props) {
-    const [attribute, setAttribute] = React.useState('');
-    const [weather, setWeather] = React.useState('');
-    const [range, setRange] = React.useState([0, 1]);
+    const [attribute, setAttribute] = useState('');
+    const [weather, setWeather] = useState('');
+    const [range, setRange] = useState([0, 5]);
 
     const { setIsLoading } = props;
 
     const [songInfoResults, setSongInfoResults] = useState([]);
-    const [infoPage, setInfoPage] = React.useState(0);
-    const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5);
+    const [infoPage, setInfoPage] = useState(0);
+    const [rowsPerInfoPage, setRowsPerInfoPage] = useState(5);
 
     const attributeOnChange = (event) => {
         setAttribute(event.target.value);
@@ -72,13 +71,28 @@ export default function SongsForAttributeWeatherComponent(props) {
                 setIsLoading(false);
             });
         }
-    }, [attribute, range, weather]);
+    }, [attribute, range, weather, setIsLoading]);
+
+    const CustomSlider = styled(Slider)(({ theme }) => ({
+        color: 'black', 
+        height: '2px',
+        "& .MuiSlider-thumb": {
+            backgroundColor: 'black',
+            height: '18px',
+            width: '18px'
+        },
+        "& .MuiSlider-rail": {
+            color: 'grey',
+            height: '2px'
+        }
+    }));
 
     return (
         <Container maxWidth="sm">
             <Box sx={{
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                alignItems: 'center'
             }}>
                 <FormControl sx={{ minWidth: 120 }}>
                     <InputLabel id="weather-select-label">Weather</InputLabel>
@@ -107,14 +121,14 @@ export default function SongsForAttributeWeatherComponent(props) {
                 </FormControl>
                 {/* TODO adjust slider functionality */}
                 <Box sx={{ minWidth: 200 }}>
-                    <Slider
+                    <CustomSlider
                         getAriaLabel={() => 'Attribute Range'}
                         value={range}
                         onChange={handleSliderChange}
                         step={.1}
                         valueLabelDisplay="auto"
                         min={0}
-                        max={1}
+                        max={5}
                     />
                 </Box>
             </Box>

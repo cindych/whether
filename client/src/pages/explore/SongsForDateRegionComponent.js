@@ -11,7 +11,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import moment from 'moment';
-import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,7 +18,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 
 import { getSongsLocationDate } from '../../fetcher';
 import { basicColumns, region } from './options';
@@ -33,8 +31,8 @@ export default function SongsForDateRegionComponent(props) {
     const { setIsLoading } = props;
 
     const [songInfoResults, setSongInfoResults] = useState([]);
-    const [infoPage, setInfoPage] = React.useState(0);
-    const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5);
+    const [infoPage, setInfoPage] = useState(0);
+    const [rowsPerInfoPage, setRowsPerInfoPage] = useState(5);
 
     const regionOnChange = (event) => {
         setRegion(event.target.value);

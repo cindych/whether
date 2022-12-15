@@ -6,7 +6,6 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -14,7 +13,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 
 import { basicColumns, region, weather } from './options';
 import { getSongsForWeatherMultLocations, getSongsForWeather } from '../../fetcher';
@@ -23,14 +21,14 @@ const regionOptions = region.map((item) => <MenuItem value={item}>{item}</MenuIt
 const weatherOptions = weather.map((item) => <MenuItem value={item}>{item}</MenuItem>);
 
 export default function SongsForRegionWeatherComponent(props) {
-    const [region, setRegion] = React.useState('all');
-    const [weather, setWeather] = React.useState('');
+    const [region, setRegion] = useState('all');
+    const [weather, setWeather] = useState('');
 
     const { setIsLoading } = props;
 
     const [songInfoResults, setSongInfoResults] = useState([]);
-    const [infoPage, setInfoPage] = React.useState(0);
-    const [rowsPerInfoPage, setRowsPerInfoPage] = React.useState(5);
+    const [infoPage, setInfoPage] = useState(0);
+    const [rowsPerInfoPage, setRowsPerInfoPage] = useState(5);
 
     const weatherOnChange = (event) => {
         setWeather(event.target.value);
@@ -45,15 +43,12 @@ export default function SongsForRegionWeatherComponent(props) {
     }
 
     const handleChangeRowsPerInfoPage = e => {
-        setRowsPerInfoPage(+e.target.value);
+        setRowsPerInfoPage( + e.target.value);
         setInfoPage(0);
     }
 
     // useEffect runs on load + whenever weather, region are updated
     useEffect(() => {
-        console.log(weather, region);
-        // TODO: add loading options
-
         if (weather !== '' && region === 'all') {
             setIsLoading(true);
             getSongsForWeatherMultLocations(weather).then(res => {

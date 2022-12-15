@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
@@ -79,13 +80,14 @@ function IndivSong() {
     }
 
     return (
-        <div className="indiv-song-page" style={{ minWidth: '800px' }}>
+        <Container className="indiv-song-page" style={{ minWidth: '800px' }}>
+            <Typography align="center" variant="h2">song info</Typography>
             <div style={{ width: '75%', margin: '0 auto', marginTop: '3%', display: 'flex' }}>
                 <div style={{ margin: '0 auto' }}>
                     <TextField fullWidth margin="dense" sx={{ marginRight: '5px' }} variant="outlined" value={artist} label={"Artist"} onChange={e => setArtist(e.target.value)} />
                     <TextField fullWidth margin="dense" value={title} label={"Title"} onChange={e => setTitle(e.target.value)} /> 
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', marginTop: '2%', marginBottom: '2%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', margin: '5%' }}>
                     <Button sx={{
                             marginRight: '5px',
                             background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 35%, rgba(124,124,124,1) 100%)',
@@ -126,7 +128,6 @@ function IndivSong() {
                     </Button>
                 </div>
             </div>
-
             <div className="data-results">
                 { showSongInfo && songInfoResults.length > 0 &&
                     <Fade in={showSongInfo}>
@@ -412,7 +413,7 @@ function IndivSong() {
                     </Fade>
                 }
             </div>
-        </div>
+        </Container>
     );
 };
 

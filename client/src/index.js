@@ -8,14 +8,12 @@ import {
 
 import NavBar from './components/NavBar';
 import IndivSong from './pages/IndivSong';
-import ExploreSongs from './pages/ExploreSongs';
 import Playlist from './pages/Playlist';
 import Cities from './pages/Cities';
 
 import HomePage from './pages/HomePage';
 import PlaylistPage from './pages/PlaylistPage';
 import IndivSongPage from './pages/IndivSongPage';
-import ExploreSongsPage from './pages/ExploreSongsPage';
 
 import ExplorePage from './pages/explore/ExplorePage'
 
@@ -60,11 +58,6 @@ ReactDOM.render(
 					path="/indivSongPage"
 					render={() => (
 						<IndivSongPage />
-					)} />
-				<Route exact
-					path="/exploreSongsPage"
-					render={() => (
-						<ExploreSongsPage />
 					)} />
 			</Switch>
 		</Router>

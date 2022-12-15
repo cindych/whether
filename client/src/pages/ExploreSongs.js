@@ -385,7 +385,7 @@ function ExploreSongs() {
                             labelId="demo-simple-select-label"
                             id="demo-simple-select"
                             value={songStatsForWeatherWeather}
-                            label="Age"
+                            label="weather"
                             onChange={handleChangeSongStatsForWeatherWeather}
                         >
                             <MenuItem value={'rainy'}>Rainy</MenuItem>

@@ -38,6 +38,10 @@ export default function SongsForDateRegionComponent(props) {
         setRegion(event.target.value);
     };
 
+    const dateToString = (value) => {
+        return moment(value.toDate()).format('YYYY-MM-DD');
+    }
+
     const dateOnChange = (value) => {
         setDate(value);
     }
@@ -47,14 +51,14 @@ export default function SongsForDateRegionComponent(props) {
     }
 
     const handleChangeRowsPerInfoPage = e => {
-        setRowsPerInfoPage(+e.target.value);
+        setRowsPerInfoPage( + e.target.value);
         setInfoPage(0);
     }
 
     useEffect(() => {
         if (date !== null && region !== '') {
             setIsLoading(true);
-            getSongsLocationDate(region, date).then(res => {
+            getSongsLocationDate(region, dateToString(date)).then(res => {
                 setIsLoading(false);
                 setSongInfoResults(res.results);
             });
@@ -85,7 +89,6 @@ export default function SongsForDateRegionComponent(props) {
                         label="Date"
                         value={date}
                         onChange={dateOnChange}
-                        formatDate={(value) => moment(value).format('YYY-MM-DD')}
                         renderInput={(params) => <TextField {...params} />}
                     />
                 </LocalizationProvider>
@@ -113,7 +116,6 @@ export default function SongsForDateRegionComponent(props) {
                                         <TableRow key={row.title}>
                                             <TableCell>{row.title}</TableCell>
                                             <TableCell>{row.artist}</TableCell>
-                                            {/* <TableCell>{row.region}</TableCell> */}
                                         </TableRow>
                                     );
                                 })}

@@ -22,14 +22,14 @@ const getSongsForWeatherMultLocations = async (weather) => {
 }
 
 const getSongsLocationDate = async (location, date) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs/${location}&date=${date}`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs/${location}?date=${date}`, {
         method: 'GET',
     })
     return res.json()
 }
 
 const getSongsAttrHighLow = async (attribute, high) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs/${attribute}&high=${high}`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs/${attribute}?high=${high}`, {
         method: 'GET',
     })
     return res.json()

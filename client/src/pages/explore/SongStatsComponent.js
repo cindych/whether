@@ -32,6 +32,7 @@ export default function SongStatsComponent() {
         setAttribute(event.target.value);
     };
 
+    // TODO: remove all option for regions for this
     const regionOnChange = (event) => {
         setRegion(event.target.value);
     };

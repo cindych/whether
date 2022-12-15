@@ -62,7 +62,7 @@ export default function SongsForRegionWeatherComponent() {
                 setSongInfoResults(res.results);
             });
         }
-    }, [weather, region]);
+    }, [region, weather]);
 
     return (
         <Container maxWidth="sm">

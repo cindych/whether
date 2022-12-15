@@ -26,7 +26,7 @@ app.get('/songs/:weather/multlocations', routes.songsForWeatherMultLocations)
 
 // return all songs played in a given region for the provided date (in query)
 // /songs/location?date
-app.get('/songs/:location', routes.songsLocationDate)
+app.get('/songs/locationdate/:location', routes.songsLocationDate)
 
 // get all songs with request attribute, query high or low? (default high)
 // /songs/attribute?high (high will be true or false)

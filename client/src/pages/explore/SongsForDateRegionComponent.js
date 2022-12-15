@@ -35,7 +35,11 @@ export default function SongsForDateRegionComponent(props) {
     const [rowsPerInfoPage, setRowsPerInfoPage] = useState(5);
 
     const regionOnChange = (event) => {
-        setRegion(event.target.value);
+        if (event.target.value == "all") {
+            setRegion("")
+        } else {
+            setRegion(event.target.value);
+        }
     };
 
     const dateToString = (value) => {

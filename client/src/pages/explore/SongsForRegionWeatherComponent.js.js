@@ -65,8 +65,7 @@ export default function SongsForRegionWeatherComponent() {
     }, [region, weather]);
 
     return (
-        <Container maxWidth="sm" height="50%">
-            SongsForRegionWeatherComponent
+        <Container maxWidth="sm">
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -96,9 +95,8 @@ export default function SongsForRegionWeatherComponent() {
                     </Select>
                 </FormControl>
             </Box>
-            <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                {/* <Typography align="center" variant="h5"> Songs played in {songsForWeatherLocation ? songsForWeatherLocation : "all regions"} when the weather was {songsForWeatherWeather}</Typography> */}
-                <TableContainer sx={{ height: "40%" }}>
+            <Box>
+                <TableContainer sx={{ height: "350px" }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -136,7 +134,7 @@ export default function SongsForRegionWeatherComponent() {
                     onPageChange={handleChangeInfoPage}
                     onRowsPerPageChange={handleChangeRowsPerInfoPage}
                 />
-            </Paper>
+            </Box>
         </Container>
     )
 };

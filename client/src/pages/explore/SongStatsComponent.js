@@ -57,8 +57,7 @@ export default function SongStatsComponent() {
     }, [attribute, region, weather]);
 
     return (
-        <Container maxWidth="sm" height="50%">
-            SongStatsComponent
+        <Container maxWidth="sm">
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -100,9 +99,8 @@ export default function SongStatsComponent() {
                     </Select>
                 </FormControl>
             </Box>
-            <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                {/* <Typography align="center" variant="h5"> Min, max, and average {songStatsForWeatherAttr} for songs played in {songStatsForWeatherLocation} on {songStatsForWeatherWeather} days</Typography> */}
-                <TableContainer sx={{ height: "40%" }}>
+            <Box>
+                <TableContainer sx={{ height: "150px" }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -130,7 +128,7 @@ export default function SongStatsComponent() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Paper>
+            </Box>
         </Container>
     )
 };

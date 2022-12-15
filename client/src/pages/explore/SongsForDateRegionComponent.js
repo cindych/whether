@@ -65,8 +65,7 @@ export default function SongsForDateRegionComponent() {
     }, [date, region]);
 
     return (
-        <Container maxWidth="sm" height="50%">
-            SongsForDateRegionComponent
+        <Container maxWidth="sm">
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -85,6 +84,7 @@ export default function SongsForDateRegionComponent() {
                 </FormControl>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
+                        sx={{ minWidth: 120 }}
                         label="Date"
                         value={date}
                         onChange={dateOnChange}
@@ -93,9 +93,8 @@ export default function SongsForDateRegionComponent() {
                     />
                 </LocalizationProvider>
             </Box>
-            <Paper elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '20px' }}>
-                {/* <Typography align="center" variant="h5"> Songs played in {region ? region : "all regions"} when the date was {date}</Typography> */}
-                <TableContainer sx={{ height: "40%" }}>
+            <Box>
+                <TableContainer sx={{ height: "350px" }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -133,7 +132,7 @@ export default function SongsForDateRegionComponent() {
                     onPageChange={handleChangeInfoPage}
                     onRowsPerPageChange={handleChangeRowsPerInfoPage}
                 />
-            </Paper>
+            </Box>
         </Container>
     )
 };

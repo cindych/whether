@@ -15,7 +15,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-
+import Typography from '@mui/material/Typography';
 
 import {
     getAllSongs, getSongsAttrThresholdWeather
@@ -60,7 +60,7 @@ export default function SongsForAttributeWeatherComponent() {
         console.log(weather, attribute, range);
         // TODO: add loading options
 
-        if (attribute === '' &&weather === '') {
+        if (attribute === '' && weather === '') {
             getAllSongs().then(res => {
                 setSongInfoResults(res.results);
             });
@@ -73,8 +73,7 @@ export default function SongsForAttributeWeatherComponent() {
     }, [attribute, range, weather]);
 
     return (
-        <Container maxWidth="sm" height="50%">
-            SongsForAttributeWeatherComponent
+        <Container maxWidth="sm">
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between'
@@ -82,6 +81,7 @@ export default function SongsForAttributeWeatherComponent() {
                 <FormControl sx={{ minWidth: 120 }}>
                     <InputLabel id="weather-select-label">Weather</InputLabel>
                     <Select
+
                         labelId="weather-select-label"
                         id="weather-select"
                         value={weather}
@@ -116,9 +116,8 @@ export default function SongsForAttributeWeatherComponent() {
                     />
                 </Box>
             </Box>
-            <Paper>
-                {/* <Typography align="center" variant="h5"> 🎶 All Songs 🎶</Typography> */}
-                <TableContainer sx={{ height: "40%" }}>
+            <Box>
+                <TableContainer sx={{ height: '500px' }}>
                     <Table stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -168,7 +167,7 @@ export default function SongsForAttributeWeatherComponent() {
                     onPageChange={handleChangeInfoPage}
                     onRowsPerPageChange={handleChangeRowsPerInfoPage}
                 />
-            </Paper>
+            </Box>
         </Container>
     )
 };

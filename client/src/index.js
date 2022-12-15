@@ -37,7 +37,7 @@ ReactDOM.render(
 				<Route exact
 					path="/explore"
 					render={() => (
-						<ExploreSongs />
+						<ExplorePage />
 					)} />
 				<Route exact
 					path="/city"
@@ -48,12 +48,6 @@ ReactDOM.render(
 					path="/homepage"
 					render={() => (
 						<HomePage />
-					)} />
-
-				<Route exact
-					path="/e"
-					render={() => (
-						<ExplorePage />
 					)} />
 
 // below are old pages with react components TODO: delete when done

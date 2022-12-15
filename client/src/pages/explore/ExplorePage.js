@@ -15,7 +15,6 @@ export default function ExplorePage() {
     return (
         <Container>
             <Typography align="center" variant="h2">explore</Typography>
-
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between',

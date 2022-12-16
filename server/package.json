@@ -12,7 +12,7 @@
     },
     "scripts": {
       "test": "jest --coverage",
-      "start": "nodemon server.js"
+      "start": "node server.js"
     }
   }
   

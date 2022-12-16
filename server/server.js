@@ -7,6 +7,7 @@ const routes = require('./routes')
 const config = require('./config.json')
 
 const app = express();
+const PORT = process.env.PORT || 8000;
 
 // whitelist localhost 3000
 app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
@@ -48,7 +49,7 @@ app.get('/songStatsForWeather', routes.songStatsForWeather)
 // return cities where average specified stat of songs played on weather days is above threshold
 app.get('/cities/:attribute/:weather/:threshold', routes.cities)
 
-app.listen(config.server_port, () => {
+app.listen(PORT, () => {
     console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
 });
 

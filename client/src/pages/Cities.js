@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
-import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import LocationCityIcon from '@mui/icons-material/LocationCity';
@@ -21,6 +19,8 @@ function Cities() {
     const [weather, setWeather] = useState('');
     const [attribute, setAttribute] = useState('');
     const [threshold, setThreshold] = useState('');
+
+    const [isLoading, setIsLoading] = useState(false);
 
     const [data, setData] = useState([]);
 
@@ -58,14 +58,29 @@ function Cities() {
                             color: 'white',
                             height: 48,
                             padding: '0 25px',
-                            marginTop: '3%'
+                            marginTop: '3%',
+                            "&.Mui-disabled": {
+                                WebkitTextFillColor: "gray",
+                                color: "gray"
+                            }
                         }}
-                        onClick={() => getCities(attribute, weather, threshold).then(res => setData(res.results))}
+                        onClick={() => {
+                            setIsLoading(true);
+                            getCities(attribute, weather, threshold).then(res => {
+                                setData(res.results);
+                                setIsLoading(false);
+                            });
+                        }}
                         startIcon={<LocationCityIcon />}
+                        disabled={!weather || !attribute || !threshold}
                     >
                     Get cities
                 </Button>
             </Box>
+            <div className="indicators" style={{ textAlign: 'center' }}>
+                    {isLoading ? 'loading' : ''}
+                    {!isLoading && data.length === 0 ? 'no results ):' : ''}
+                </div>
             <div style={{ margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                 { data.map(entry => <City key={entry.location} name={entry.location} />)}
             </div>

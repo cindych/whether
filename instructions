@@ -1,0 +1,6 @@
+Instructions for local build:
+
+1. Download the client and server folders.
+2. Enter each folder and run npm install to install all dependencies.
+3. Start the server from within the server folder (run npm start), then start the client from the client folder (also run npm start).
+4. Once started, the app can be accessed by going to localhost:3000. Backend calls may be made at localhost:8080.

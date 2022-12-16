@@ -1,7 +1,8 @@
 
 export const weather = ['rainy', 'snowy', 'sunny', 'cloudy', 'windy'];
+export const weatherLimited = ['rainy', 'snowy', 'sunny'];
 export const attribute = ['acousticness', 'danceability', 'energy', 'instrumentalness', 'speechiness', 'liveness', 'loudness', 'mode', 'tempo', 'valence', 'duration'];
-export const region = ['all', 'Africa', 'Argentina', 'Brazil', 'Canada', 'Chile', 'France', 'Germany', 'Greece', 'Japan', 'Mexico', 'South korea', 'Spain', 'Ukraine', 'United States'];
+export const region = ['all', 'africa', 'argentina', 'brazil', 'canada', 'chile', 'france', 'germany', 'greece', 'japan', 'mexico', 'south korea', 'spain', 'ukraine', 'united states'];
 
 export const attributeColumns = [
     { id: 'artist', label: 'Artist' },

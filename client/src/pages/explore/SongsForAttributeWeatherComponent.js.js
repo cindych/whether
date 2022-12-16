@@ -76,6 +76,8 @@ export default function SongsForAttributeWeatherComponent(props) {
     const CustomSlider = styled(Slider)(({ theme }) => ({
         color: 'black', 
         height: '2px',
+        width: '80%',
+        marginLeft: '20px!important',
         "& .MuiSlider-thumb": {
             backgroundColor: 'black',
             height: '18px',
@@ -95,7 +97,7 @@ export default function SongsForAttributeWeatherComponent(props) {
                 alignItems: 'center'
             }}>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="weather-select-label">Weather</InputLabel>
+                    <InputLabel id="weather-select-label">weather</InputLabel>
                     <Select
 
                         labelId="weather-select-label"
@@ -108,7 +110,7 @@ export default function SongsForAttributeWeatherComponent(props) {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="attribute-select-label">Attribute</InputLabel>
+                    <InputLabel id="attribute-select-label">attribute</InputLabel>
                     <Select
                         labelId="attribute-select-label"
                         id="attribute-select"

@@ -48,6 +48,7 @@ function Playlist() {
     return (
         <Container maxWidth="md">
             <Typography align="center" variant="h2">playlist</Typography>
+            <div style={{ textAlign: 'center', marginTop: '2.5%' }}><Typography align="center" variant="caption">generate a playlist of 10 songs based on the region & weather °˖✧◝(⁰▿⁰)◜✧˖°</Typography></div>
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between',

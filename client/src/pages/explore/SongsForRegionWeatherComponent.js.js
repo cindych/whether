@@ -71,7 +71,7 @@ export default function SongsForRegionWeatherComponent(props) {
                 justifyContent: 'space-between'
             }}>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="weather-select-label">Weather</InputLabel>
+                    <InputLabel id="weather-select-label">weather</InputLabel>
                     <Select
                         labelId="weather-select-label"
                         id="weather-select"
@@ -83,7 +83,7 @@ export default function SongsForRegionWeatherComponent(props) {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="region-select-label">Region</InputLabel>
+                    <InputLabel id="region-select-label">region</InputLabel>
                     <Select
                         labelId="region-select-label"
                         id="region-select"

@@ -7,12 +7,11 @@ import {
 } from 'react-router-dom';
 
 import NavBar from './components/NavBar';
-import IndivSong from './pages/IndivSong';
-import Playlist from './pages/Playlist';
-import Cities from './pages/Cities';
 
-import HomePage from './pages/HomePage';
+import Playlist from './pages/Playlist';
+import IndivSong from './pages/IndivSong';
 import ExplorePage from './pages/explore/ExplorePage'
+import Cities from './pages/Cities';
 
 ReactDOM.render(
 	<div>

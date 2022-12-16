@@ -402,13 +402,13 @@ async function songAvgWeatherStats(req, res) {
 
 // return cities where average specified stat of songs played on weather days is above threshold
 async function cities(req, res) {
+    console.log("called cities")
     var query = `
     WITH weatherDays(location, date) AS (
         SELECT location, date
         FROM Weather w
         WHERE 
     `
-    console.log("called cities")
     if (req.params.weather === 'rainy') {
         query += ` w.precipitation > 1`
     } else if (req.params.weather === 'sunny') {
@@ -435,7 +435,7 @@ async function cities(req, res) {
     ),
     avgAttr(location, average) AS (
         SELECT location, AVG(${req.params.attribute}) AS average
-        FROM weatherSongs JOIN Chart ch ON 
+        FROM weatherSongs
         GROUP BY location
     )
     SELECT location

@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // whitelist localhost 3000
-app.use(cors({ credentials: true, origin: ['http://localhost:3000'] }));
+app.use(cors({ credentials: true, origin: ['https://whether.herokuapp.com/'] }));
 
 // return all songs
 app.get('/allSongs', routes.allSongs)

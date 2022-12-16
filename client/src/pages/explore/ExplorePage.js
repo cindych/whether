@@ -17,7 +17,7 @@ export default function ExplorePage() {
         <Container>
             <Typography align="center" variant="h2">explore</Typography>
             <br></br>
-            {isLoading ? 'loading' : ''}
+            {isLoading ? 'loading' : ':)'}
             <Box sx={{
                 display: 'flex',
                 justifyContent: 'space-between',

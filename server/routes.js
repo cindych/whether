@@ -18,7 +18,7 @@ async function allSongs(req, res) {
     // if the page is defined
     if (req.query.page && !isNaN(req.query.page)) {
         const page = req.query.page
-        const pagesize = req.query.pagesize ? req.query.pagesize: 10
+        const pagesize = req.query.pagesize ? req.query.pagesize : 10
         const offset = (page - 1) * pagesize
 
         // when charts data is uploaded, change query to:
@@ -38,7 +38,7 @@ async function allSongs(req, res) {
                 console.log("results are:", results)
             }
         })
-   
+
     } else { // page is undefined
         connection.query(`
         SELECT DISTINCT title, artist, id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration
@@ -64,13 +64,13 @@ async function songInfo(req, res) {
         WHERE artist LIKE '%${req.query.artist}%' AND title LIKE '${req.query.title}%'
         ORDER BY title
         `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        })
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    })
 }
 
 // return songs played for req.param.weather
@@ -93,7 +93,7 @@ async function songsForWeather(req, res) {
     } else if (req.params.weather === 'windy') {
         query += `\
         WHERE w.Wind_Speed > 20`
-    } 
+    }
 
     if (req.query.location != undefined && req.query.location != '') {
         query += ` AND ch.region = '${req.query.location}'`
@@ -129,7 +129,7 @@ async function songsForWeatherMultLocations(req, res) {
         query += `WHERE cloudiness > 400`
     } else if (req.params.weather === 'windy') {
         query += `WHERE Wind_Speed > 20 `
-    } 
+    }
 
     query += `
     \ 
@@ -158,10 +158,9 @@ async function songsForWeatherMultLocations(req, res) {
 // get all songs played on query date in given location, date is optional
 async function songsLocationDate(req, res) {
     // location must be one of the following: 
-        // africa, argentina, australia, brazil, canada, chile, france, germany,
-        // greece, japan, mexico, south korea, spain, ukraine, united states
+    // africa, argentina, australia, brazil, canada, chile, france, germany,
+    // greece, japan, mexico, south korea, spain, ukraine, united states
     // date format must be "yyyy-mm-dd"
-    console.log("called songsLocationDate")
     var query = `
     SELECT DISTINCT title, artist, id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration
     FROM Songs NATURAL JOIN Chart ch
@@ -171,6 +170,8 @@ async function songsLocationDate(req, res) {
     if (req.query.date) {
         query += ` AND ch.date='${req.query.date}'`
     }
+
+    query += ` ORDER BY ch.song_rank`
 
     connection.query(`
      ${query}
@@ -182,14 +183,14 @@ async function songsLocationDate(req, res) {
             res.json({ results: results })
         }
     });
-  
+
 }
 
 // get songs with either high or low attr, as specified (high/low is query, attr is req)
 async function songsAttrHighLow(req, res) {
     // song attribute must be one of the following:
-        // acousticness, danceability, energy, instrumentalness,
-        // speechiness, liveness, loudness, mode, tempo, valence, duration
+    // acousticness, danceability, energy, instrumentalness,
+    // speechiness, liveness, loudness, mode, tempo, valence, duration
     // high/low is named high, takes values true or false
     console.log("called songsAttrHighLow")
     var query = `
@@ -215,19 +216,19 @@ async function songsAttrHighLow(req, res) {
             res.json({ results: results })
         }
     });
-  
+
 }
 
 // get songs with specified attribute within threshold min/max played on days with weather
 async function songsAttrThresholdWeather(req, res) {
     // song attribute must be one of the following:
-        // acousticness, danceability, energy, instrumentalness,
-        // speechiness, liveness, loudness, mode, tempo, valence, duration
+    // acousticness, danceability, energy, instrumentalness,
+    // speechiness, liveness, loudness, mode, tempo, valence, duration
     // high/low is named high, takes values true or false
     console.log("called songsAttrThresholdWeather")
-    const min = !isNaN(req.query.minThreshold) ? req.query.minThreshold: 0
+    const min = !isNaN(req.query.minThreshold) ? req.query.minThreshold : 0
 
-    const max = !isNaN(req.query.maxThreshold) ? req.query.maxThreshold: 1
+    const max = !isNaN(req.query.maxThreshold) ? req.query.maxThreshold : 1
 
     var query = `
     SELECT DISTINCT title, artist, s.id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration 
@@ -246,7 +247,7 @@ async function songsAttrThresholdWeather(req, res) {
         query += `AND w.cloudiness > 400`
     } else if (req.params.weather === 'windy') {
         query += `AND w.Wind_Speed > 20`
-    } 
+    }
 
     query += ` ORDER BY ${req.params.attribute}`
 
@@ -260,7 +261,7 @@ async function songsAttrThresholdWeather(req, res) {
             res.json({ results: results })
         }
     });
-  
+
 }
 
 
@@ -268,30 +269,30 @@ async function songsAttrThresholdWeather(req, res) {
 // get basic playlist
 async function basicPlaylist(req, res) {
     // note: location must be a region from the following list:
-        // africa, argentina, australia, brazil, canada, chile, france, germany,
-        // greece, japan, mexico, south korea, spain, ukraine, united states
+    // africa, argentina, australia, brazil, canada, chile, france, germany,
+    // greece, japan, mexico, south korea, spain, ukraine, united states
     // and weather must be from the following list:
-        // sunny (avg temp > 50 and precipitation < 0.1), rainy (precipitation >= 0.1), snowy (snowfall > 0.1)
+    // sunny (avg temp > 50 and precipitation < 0.1), rainy (precipitation >= 0.1), snowy (snowfall > 0.1)
     console.log("called basicPlaylist")
     var query = `WITH weatherDays(date) AS (
         SELECT date
         FROM Weather w JOIN Cities c ON w.location = c.city`
-    
-        if (req.query.weather === 'rainy') {
-            query += `\
+
+    if (req.query.weather === 'rainy') {
+        query += `\
             WHERE w.precipitation > 1
             `
-        } else if (req.query.weather === 'snowy') {
-            query += `\
+    } else if (req.query.weather === 'snowy') {
+        query += `\
             WHERE w.snowfall > 1
             `
-        } else if (req.query.weather === 'sunny') {
-            query += `\
+    } else if (req.query.weather === 'sunny') {
+        query += `\
             WHERE w.precipitation <= 1 AND w.temperature > 50
             `
-        }
+    }
 
-        query += `AND c.region = '${req.query.location}'),
+    query += `AND c.region = '${req.query.location}'),
         regionSongs(title, artist, date) AS (
             SELECT title, artist, date
             FROM Chart
@@ -302,26 +303,26 @@ async function basicPlaylist(req, res) {
         LIMIT 10
         `
 
-        connection.query(`
+    connection.query(`
         ${query}
         `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
-        });
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
+    });
 }
 
 // get min, max, and avg query stat for songs played on days with query weather
 async function songStatsForWeather(req, res) {
     // song statistic must be one of the following:
-        // acousticness, danceability, energy, instrumentalness,
-        // speechiness, liveness, loudness, mode, tempo, valence, duration
+    // acousticness, danceability, energy, instrumentalness,
+    // speechiness, liveness, loudness, mode, tempo, valence, duration
     // and weather must be from the following list:
-        // sunny (avg temp > 50 and precipitation < 0.1), rainy (precipitation >= 0.1), snowy (snowfall > 0.1)
-    
+    // sunny (avg temp > 50 and precipitation < 0.1), rainy (precipitation >= 0.1), snowy (snowfall > 0.1)
+
     // note: boolean condition needs to be added! 
     // (corresponds to NOT IN instead of IN)
     console.log("called songStatsForWeather")
@@ -352,12 +353,12 @@ async function songStatsForWeather(req, res) {
     connection.query(`
         ${query}
         `, function (error, results, fields) {
-            if (error) {
-                console.log(error)
-                res.json({ error: error })
-            } else if (results) {
-                res.json({ results: results })
-            }
+        if (error) {
+            console.log(error)
+            res.json({ error: error })
+        } else if (results) {
+            res.json({ results: results })
+        }
     });
 }
 
@@ -407,7 +408,7 @@ async function cities(req, res) {
         query += ` w.cloudiness > 400`
     } else if (req.params.weather === 'windy') {
         query += ` w.Wind_Speed > 20`
-    } 
+    }
 
     query += `
     \
@@ -435,7 +436,7 @@ async function cities(req, res) {
 }
 
 module.exports = {
-    allSongs, 
+    allSongs,
     basicPlaylist,
     songStatsForWeather,
     songAvgWeatherStats,

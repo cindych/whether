@@ -76,7 +76,7 @@ export default function SongsForDateRegionComponent(props) {
                 justifyContent: 'space-between'
             }}>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="region-select-label">Region</InputLabel>
+                    <InputLabel id="region-select-label">region</InputLabel>
                     <Select
                         labelId="region-select-label"
                         id="region-select"
@@ -90,7 +90,7 @@ export default function SongsForDateRegionComponent(props) {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                         sx={{ minWidth: 120 }}
-                        label="Date"
+                        label="date"
                         value={date}
                         onChange={dateOnChange}
                         renderInput={(params) => <TextField {...params} />}

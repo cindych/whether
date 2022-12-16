@@ -33,7 +33,6 @@ export default function SongStatsComponent(props) {
         setAttribute(event.target.value);
     };
 
-    // TODO: remove all option for regions for this
     const regionOnChange = (event) => {
         setRegion(event.target.value);
     };
@@ -62,7 +61,7 @@ export default function SongStatsComponent(props) {
                 justifyContent: 'space-between'
             }}>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="weather-select-label">Weather</InputLabel>
+                    <InputLabel id="weather-select-label">weather</InputLabel>
                     <Select
                         labelId="weather-select-label"
                         id="weather-select"
@@ -74,7 +73,7 @@ export default function SongStatsComponent(props) {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="attribute-select-label">Attribute</InputLabel>
+                    <InputLabel id="attribute-select-label">attribute</InputLabel>
                     <Select
                         labelId="attribute-select-label"
                         id="attribute-select"
@@ -86,7 +85,7 @@ export default function SongStatsComponent(props) {
                     </Select>
                 </FormControl>
                 <FormControl sx={{ minWidth: 120 }}>
-                    <InputLabel id="region-select-label">Region</InputLabel>
+                    <InputLabel id="region-select-label">region</InputLabel>
                     <Select
                         labelId="region-select-label"
                         id="region-select"

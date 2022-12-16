@@ -14,7 +14,6 @@ connection.connect();
 
 // get all songs
 async function allSongs(req, res) {
-    console.log("called allSongs")
     // if the page is defined
     if (req.query.page && !isNaN(req.query.page)) {
         const page = req.query.page
@@ -57,7 +56,6 @@ async function allSongs(req, res) {
 // get info of specified song
 // also possible to search for information on songs by a particular artist => e.g. artist = 'zayn' and title = ''
 async function songInfo(req, res) {
-    console.log("called songInfo")
     connection.query(`
         SELECT DISTINCT title, artist, id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration
         FROM Songs NATURAL JOIN Chart
@@ -75,7 +73,6 @@ async function songInfo(req, res) {
 
 // return songs played for req.param.weather
 async function songsForWeather(req, res) {
-    console.log("called songsForWeather")
     var query = `SELECT DISTINCT title, artist \
     FROM Chart ch JOIN Weather w ON ch.date = w.Date`
     if (req.params.weather === 'rainy') {
@@ -114,7 +111,6 @@ async function songsForWeather(req, res) {
 
 // return songs played for req.param.weather across multiple locations
 async function songsForWeatherMultLocations(req, res) {
-    console.log("called songsForWeatherMultLocations")
     var query = `
     WITH weatherDays (date, location) AS (
         SELECT date, Location \
@@ -192,7 +188,6 @@ async function songsAttrHighLow(req, res) {
     // acousticness, danceability, energy, instrumentalness,
     // speechiness, liveness, loudness, mode, tempo, valence, duration
     // high/low is named high, takes values true or false
-    console.log("called songsAttrHighLow")
     var query = `
     SELECT * 
     FROM Songs
@@ -225,7 +220,6 @@ async function songsAttrThresholdWeather(req, res) {
     // acousticness, danceability, energy, instrumentalness,
     // speechiness, liveness, loudness, mode, tempo, valence, duration
     // high/low is named high, takes values true or false
-    console.log("called songsAttrThresholdWeather")
     const min = !isNaN(req.query.minThreshold) ? req.query.minThreshold : 0
 
     const max = !isNaN(req.query.maxThreshold) ? req.query.maxThreshold : 1
@@ -273,7 +267,6 @@ async function basicPlaylist(req, res) {
     // greece, japan, mexico, south korea, spain, ukraine, united states
     // and weather must be from the following list:
     // sunny (avg temp > 50 and precipitation < 0.1), rainy (precipitation >= 0.1), snowy (snowfall > 0.1)
-    console.log("called basicPlaylist")
     var query = `WITH weatherDays(date) AS (
         SELECT date
         FROM Weather w JOIN Cities c ON w.location = c.city`
@@ -325,7 +318,6 @@ async function songStatsForWeather(req, res) {
 
     // note: boolean condition needs to be added! 
     // (corresponds to NOT IN instead of IN)
-    console.log("called songStatsForWeather")
     var query = `
     WITH regionWeatherSongs(id) AS (
         SELECT ch.id
@@ -370,7 +362,6 @@ async function songAvgWeatherStats(req, res) {
     // some leeway is given to title (query checks Like% instead of =) but must be mostly correct
     // if multiple artists, at least one must be included
     // optional location?
-    console.log("called songAvgWeatherStats")
     connection.query(`
     SELECT artist, title, AVG(w.precipitation) AS avgPrecipitation, AVG(temperature) as avgTemp, AVG(snowfall) as avgSnowfall
     FROM Chart ch JOIN Weather w ON ch.date = w.Date
@@ -389,7 +380,6 @@ async function songAvgWeatherStats(req, res) {
 
 // return cities where average specified stat of songs played on weather days is above threshold
 async function cities(req, res) {
-    console.log('called cities')
     var query = `
     WITH weatherSongs(location, ${req.params.attribute}) AS (
         SELECT w.location, s.${req.params.attribute}

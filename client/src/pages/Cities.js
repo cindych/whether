@@ -77,11 +77,11 @@ function Cities() {
                     Get cities
                 </Button>
             </Box>
-            <div style={{ margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
-                <div className="indicators">
+            <div className="indicators" style={{ textAlign: 'center' }}>
                     {isLoading ? 'loading' : ''}
                     {!isLoading && data.length === 0 ? 'no results ):' : ''}
                 </div>
+            <div style={{ margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', textAlign: 'center', width: '80%' }}>
                 { data.map(entry => <City key={entry.location} name={entry.location} />)}
             </div>
         </div>

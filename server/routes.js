@@ -107,8 +107,9 @@ async function songsForWeather(req, res) {
 
 // return songs played for req.param.weather across multiple locations
 async function songsForWeatherMultLocations(req, res) {
+    console.log("called songsForWeatherMultLocations")
     var query = `
-    WITH weatherDays (date, location) AS (
+    WITH weatherDays(date, location) AS (
         SELECT date, Location \
         FROM Weather \ `
     if (req.params.weather === 'rainy') {
@@ -125,15 +126,18 @@ async function songsForWeatherMultLocations(req, res) {
 
     query += `
     \ 
-    ), weatherDayCts (title, artist, count) AS (
-        SELECT title, artist, COUNT(location)
-        FROM Chart ch JOIN Cities c ON ch.region = c.region 
-            JOIN weatherDays wd ON ch.date = wd.date AND c.city = wd.location
-        GROUP BY title, artist
+    ), 
+    ch(region, date, title, artist) AS (
+        SELECT region, date, title, artist
+        FROM Chart
     )
     SELECT title, artist
-    FROM weatherDayCts
-    WHERE count > 1`
+    FROM ch
+        JOIN Cities c on ch.region = c.region JOIN weatherDays wd on ch.date = wd.date
+        AND c.city = wd.location
+    GROUP BY title, artist
+    HAVING COUNT(location) > 1
+    `
 
     connection.query(`
     ${query}
@@ -317,27 +321,46 @@ async function songStatsForWeather(req, res) {
 
     console.log("called songStatsForWeather")
     var query = `
-    WITH regionWeatherSongs(id) AS (
-        SELECT ch.id
-        FROM Chart ch JOIN Cities c ON c.region = ch.region
-            JOIN Weather w ON w.location = c.city AND w.date = ch.date
+    WITH ch AS (
+        SELECT id, region, date
+        FROM Chart
+        WHERE region = '${req.query.location}'
+    ),
+    c AS (
+        SELECT region, city
+        FROM Cities
+    ),
+    w AS (
+        SELECT location, date
+        FROM Weather 
     `
-    if (req.query.weather = 'rainy') {
+
+    if (req.query.weather === 'rainy') {
         query += `\
-        WHERE w.precipitation > 1`
-    } else if (req.query.weather = 'snowy') {
+        WHERE precipitation > 1`
+    } else if (req.query.weather === 'snowy') {
         query += `\
-        WHERE WHERE w.snowfall > 1`
-    } else if (req.query.weather = 'sunny') {
+        WHERE snowfall > 1`
+    } else if (req.query.weather === 'sunny') {
         query += `\
-        WHERE w.precipitation <= 1 AND w.temperature > 50`
+        WHERE precipitation <= 1 AND temperature > 50`
     }
 
-    query += ` AND c.region = '${req.query.location}'
+    query += `
+    \
+    ),
+    regionWeatherSongs(id) AS (
+        SELECT ch.id
+        FROM ch JOIN c ON c.region = ch.region
+            JOIN w on w.location = c.city AND w.date = ch.date
+    ),
+    s AS (
+        SELECT id, ${req.query.statistic}
+        FROM Songs
     )
     SELECT MIN(${req.query.statistic}) AS min, MAX(${req.query.statistic}) AS max, AVG(${req.query.statistic}) AS avg
-    FROM Songs s
-    WHERE s.id IN (SELECT * FROM regionWeatherSongs)
+    FROM s
+    JOIN regionWeatherSongs ON s.id = regionWeatherSongs.id
     `
 
     connection.query(`
@@ -380,13 +403,12 @@ async function songAvgWeatherStats(req, res) {
 // return cities where average specified stat of songs played on weather days is above threshold
 async function cities(req, res) {
     var query = `
-    WITH weatherSongs(location, ${req.params.attribute}) AS (
-        SELECT w.location, s.${req.params.attribute}
-        FROM Songs s JOIN Chart ch ON s.id = ch.id
-            JOIN Cities c ON c.region = ch.region
-            JOIN Weather w ON w.location = c.city AND w.date = ch.date
+    WITH weatherDays(location, date) AS (
+        SELECT location, date
+        FROM Weather w
         WHERE 
     `
+    console.log("called cities")
     if (req.params.weather === 'rainy') {
         query += ` w.precipitation > 1`
     } else if (req.params.weather === 'sunny') {
@@ -401,15 +423,24 @@ async function cities(req, res) {
 
     query += `
     \
-    ), avgAttr(location, average) AS (
+    ), chart_filter(id, date, region) AS (
+        SELECT id, date, region
+        FROM Chart
+    ),
+    weatherSongs(location, ${req.params.attribute}) AS (
+        SELECT w.location, s.${req.params.attribute} 
+        FROM Songs s JOIN chart_filter ch ON s.id = ch.id
+            JOIN Cities c ON c.region = ch.region
+            JOIN weatherDays w ON w.location = c.city AND w.date = ch.date
+    ),
+    avgAttr(location, average) AS (
         SELECT location, AVG(${req.params.attribute}) AS average
-        FROM weatherSongs
+        FROM weatherSongs JOIN Chart ch ON 
         GROUP BY location
     )
     SELECT location
     FROM avgAttr
     WHERE average > ${req.params.threshold}`
-
 
     connection.query(`
     ${query}
@@ -421,7 +452,6 @@ async function cities(req, res) {
             res.json({ results: results })
         }
     });
-
 }
 
 module.exports = {

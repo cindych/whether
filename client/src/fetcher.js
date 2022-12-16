@@ -50,7 +50,7 @@ const getSongStatsForWeather = async (statistic, location, weather) => {
 }
 
 const getSongAvgWeatherStats = async (artist, title) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/songAvgWeatherStats?artist=${artist}&title=${title}`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songAvgWeatherStats?artist=${artist.replace("'", "''")}&title=${title.replace("'", "''")}`, {
         method: 'GET',
     })
     return res.json()
@@ -65,7 +65,7 @@ const getSongsAttrThresholdWeather = async (attribute, weather, minThreshold, ma
 
 
 const getSongInfo = async (artist, title) => {
-    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs?title=${title}&artist=${artist}`, {
+    var res = await fetch(`http://${config.server_host}:${config.server_port}/songs?title=${title.replace("'", "''")}&artist=${artist.replace("'", "''")}`, {
         method: 'GET',
     })
     return res.json()

@@ -27,6 +27,8 @@ function IndivSong() {
     const [artist, setArtist] = useState('');
     const [title, setTitle] = useState('');
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [songInfoResults, setSongInfoResults] = useState([]);
     const [showSongInfo, setShowSongInfo] = useState(false);
     const [infoPage, setInfoPage] = React.useState(0);
@@ -97,13 +99,22 @@ function IndivSong() {
                             color: 'white',
                             height: 48,
                             padding: '0 25px',
-                            lineHeight: '17px'
+                            lineHeight: '17px',
+                            "&.Mui-disabled": {
+                                WebkitTextFillColor: "gray",
+                                color: "gray"
+                            }
                         }}
                         onClick={() => {
-                            getSongInfo(artist, title).then(res => setSongInfoResults(res.results));
-                            setShowSongStat(false);
-                            setShowSongInfo(true);
+                            setIsLoading(true);
+                            getSongInfo(artist, title).then(res => {
+                                setSongInfoResults(res.results)
+                                setIsLoading(false);
+                                setShowSongStat(false);
+                                setShowSongInfo(true);
+                            });
                         }}
+                        disabled={!artist || !title}
                         endIcon={<InsightsIcon />}
                     >
                         Get Song Info
@@ -116,14 +127,23 @@ function IndivSong() {
                             color: 'white',
                             height: 48,
                             padding: '0 25px',
-                            lineHeight: '17px'
+                            lineHeight: '17px',
+                            "&.Mui-disabled": {
+                                WebkitTextFillColor: "gray",
+                                color: "gray"
+                            }
                         }}
                         onClick={() => {
-                                getSongAvgWeatherStats(artist, title).then(res => setSongStatResults(res.results));
-                                setShowSongInfo(false);
-                                setShowSongStat(true);
+                                setIsLoading(true);
+                                getSongAvgWeatherStats(artist, title).then(res => {
+                                    setSongStatResults(res.results);
+                                    setIsLoading(false);
+                                    setShowSongInfo(false);
+                                    setShowSongStat(true);
+                                });
                             }
                         }
+                        disabled={!artist || !title}
                         endIcon={<ThunderstormIcon />}
                     >
                         Get avg. Weather Stats
@@ -131,7 +151,8 @@ function IndivSong() {
                 </div>
             </div>
             <div className="data-results">
-                { showSongInfo && songInfoResults.length > 0 &&
+                {isLoading ? 'loading' : ''}
+                { !isLoading && showSongInfo && songInfoResults.length > 0 &&
                     <Fade in={showSongInfo}>
                         <div className="song-info-container" style={{ display: 'flex', alignItems: 'flex-start' }}>
                             <Paper elevation={4} sx={{ maxWidth: '65%', margin: '0 auto', padding: 3, marginTop: '2%' }}>
@@ -367,7 +388,7 @@ function IndivSong() {
                     </Fade>
                 }
            
-                { songStatResults.length > 0 &&
+                { !isLoading && showSongStat && songStatResults.length > 0 &&
                     <Fade in={showSongStat}>
                         <Paper className="song-stat-container" elevation={4} sx={{ width: '90%', overflow: 'hidden', margin: '0 auto', padding: 3, marginTop: '2%' }}>
                             <Typography align="center" variant="h5">Weather Statistics</Typography>

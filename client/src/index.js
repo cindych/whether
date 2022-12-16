@@ -39,11 +39,6 @@ ReactDOM.render(
 					render={() => (
 						<Cities />
 					)} />
-				<Route exact
-					path="/homepage"
-					render={() => (
-						<HomePage />
-					)} />
 			</Switch>
 		</Router>
 	</div>,

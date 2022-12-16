@@ -21,10 +21,6 @@ async function allSongs(req, res) {
         const pagesize = req.query.pagesize ? req.query.pagesize : 10
         const offset = (page - 1) * pagesize
 
-        // when charts data is uploaded, change query to:
-        // SELECT [all song attrs except id + song artist, title]
-        // FROM Songs s JOIN Charts c ON s.id = c.id (or natural join)
-
         connection.query(`
         SELECT DISTINCT title, artist, id, acousticness, danceability, energy, instrumentalness, speechiness, liveness, loudness, mode, tempo, valence, key_track, duration
         FROM Songs NATURAL JOIN Chart
@@ -224,7 +220,7 @@ async function songsAttrThresholdWeather(req, res) {
     // song attribute must be one of the following:
     // acousticness, danceability, energy, instrumentalness,
     // speechiness, liveness, loudness, mode, tempo, valence, duration
-    // high/low is named high, takes values true or false
+
     console.log("called songsAttrThresholdWeather")
     const min = !isNaN(req.query.minThreshold) ? req.query.minThreshold : 0
 
@@ -268,11 +264,12 @@ async function songsAttrThresholdWeather(req, res) {
 
 // get basic playlist
 async function basicPlaylist(req, res) {
-    // note: location must be a region from the following list:
+    // location must be a region from the following list:
     // africa, argentina, australia, brazil, canada, chile, france, germany,
     // greece, japan, mexico, south korea, spain, ukraine, united states
     // and weather must be from the following list:
     // sunny (avg temp > 50 and precipitation < 0.1), rainy (precipitation >= 0.1), snowy (snowfall > 0.1)
+
     console.log("called basicPlaylist")
     var query = `WITH weatherDays(date) AS (
         SELECT date
@@ -323,8 +320,6 @@ async function songStatsForWeather(req, res) {
     // and weather must be from the following list:
     // sunny (avg temp > 50 and precipitation < 0.1), rainy (precipitation >= 0.1), snowy (snowfall > 0.1)
 
-    // note: boolean condition needs to be added! 
-    // (corresponds to NOT IN instead of IN)
     console.log("called songStatsForWeather")
     var query = `
     WITH regionWeatherSongs(id) AS (
@@ -369,7 +364,7 @@ async function songAvgWeatherStats(req, res) {
     // song query must include title and artist, formatted correctly
     // some leeway is given to title (query checks Like% instead of =) but must be mostly correct
     // if multiple artists, at least one must be included
-    // optional location?
+
     console.log("called songAvgWeatherStats")
     connection.query(`
     SELECT artist, title, AVG(w.precipitation) AS avgPrecipitation, AVG(temperature) as avgTemp, AVG(snowfall) as avgSnowfall

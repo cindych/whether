@@ -1,6 +1,7 @@
 const express = require('express');
 const mysql      = require('mysql');
 var cors = require('cors')
+const path = require('path');
 
 
 const routes = require('./routes')
@@ -53,7 +54,7 @@ app.get('/cities/:attribute/:weather/:threshold', routes.cities)
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
   });
-  
+
 app.listen(PORT, () => {
     console.log(PORT)
     console.log(`Server running at http://${config.server_host}:${config.server_port}/`);

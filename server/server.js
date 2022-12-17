@@ -12,6 +12,7 @@ const PORT = process.env.PORT || 8000;
 // whitelist localhost 3000
 app.use(cors({ credentials: true, origin: ['https://whether.herokuapp.com/'] }));
 
+app.use('/', express.static(path.join(__dirname, '../client/build')));
 // return all songs
 app.get('/allSongs', routes.allSongs)
 
@@ -49,9 +50,14 @@ app.get('/songStatsForWeather', routes.songStatsForWeather)
 // return cities where average specified stat of songs played on weather days is above threshold
 app.get('/cities/:attribute/:weather/:threshold', routes.cities)
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+  
 app.listen(PORT, () => {
     console.log(PORT)
     console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
 });
+
 
 module.exports = app;

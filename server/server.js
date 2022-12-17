@@ -50,6 +50,7 @@ app.get('/songStatsForWeather', routes.songStatsForWeather)
 app.get('/cities/:attribute/:weather/:threshold', routes.cities)
 
 app.listen(PORT, () => {
+    console.log(PORT)
     console.log(`Server running at http://${config.server_host}:${config.server_port}/`);
 });
 

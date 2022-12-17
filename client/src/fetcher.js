@@ -66,14 +66,14 @@ const getSongsAttrThresholdWeather = async (attribute, weather, minThreshold, ma
 
 
 const getSongInfo = async (artist, title) => {
-    var res = await fetch(`https://${config.server_host}:${PORT}/songs?title=${title}&artist=${artist}`, {
+    var res = await fetch(`https://${config.server_host}/songs?title=${title}&artist=${artist}`, {
         method: 'GET',
     })
     return res.json()
 }
 
 const getCities = async (attribute, weather, threshold) => {
-    var res = await fetch(`https://${config.server_host}:${PORT}/cities/${attribute}/${weather}/${threshold}`, {
+    var res = await fetch(`https://${config.server_host}/cities/${attribute}/${weather}/${threshold}`, {
         method: 'GET',
     })
     return res.json();

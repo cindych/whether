@@ -1,4 +1,4 @@
 {
-    "server_host": "https://whether.herokuapp.com/",
+    "server_host": "whether.herokuapp.com",
     "server_port":"8080"
 }
